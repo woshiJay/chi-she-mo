@@ -1,0 +1,5 @@
+540644 -> application ID
+const accessKey = YwTE9y3AFAwTT7QN9lkva6YV5AGxja840xKfq9apd84;
+const secretKey = xdF-e9EAaWk4AtigVT19_wAXrv6tHgjDG2MfEQv7u_E;
+const apiKey = '6ab4d79b01634e93b374927451e7c17c';
+const mapsAPIKey = AIzaSyAekrfnwtbezymISS8auRePvdPqRPCUIYA
