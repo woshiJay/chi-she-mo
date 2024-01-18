@@ -24,26 +24,6 @@ app.post('/getRestaurants', async (req, res) => {
     }
 })
 
-// app.get('/getRestaurants', async (req, res) => {
-//     const {lat, lon } = req.query;
-//     console.log("Server Side")
-//     console.log(lat)
-//     console.log(long)
-//     const apiKey = 'AIzaSyBcvo-BCmcl79jG9BnDmZYHqoFpLc2CdVc';
-//     const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lon}&radius=5000&type=restaurant&key=${apiKey}`;
-
-//     try {
-//         const apiResponse = await fetch(url);
-//         const apiData = await apiResponse.json();
-//         // res.send(apiData);
-//         console.log(apiData);
-//     } catch (error) {
-//         res.status(500).send({ error: 'Error Fetching Data.' });
-//     }
-// });
-
-
-
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
   });

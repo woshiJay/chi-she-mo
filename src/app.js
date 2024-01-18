@@ -1,19 +1,6 @@
 const searchInput = document.getElementById("searchInput");
-const imageSelect = document.querySelectorAll(".imageSelect");
 
 async function init() {
-
-    //update images 
-    async function update() {
-        const res = await fetch("https://dog.ceo/api/breeds/image/random");
-        const resObj = await res.json();
-        console.log(resObj);
-        
-        imageSelect.forEach(imageSelect => {
-            imageSelect.src = resObj.message;
-        });
-    }
-
     // Get user current location
     function getLocation() {
         if ("geolocation" in navigator) {
@@ -63,54 +50,16 @@ async function init() {
         console.error("Error wtf yee tao:", error);
       })
       
-
-
-
-
-
-//        let url = `http://localhost:5501/getRestaurants?lat=${lat}&lon=${lon}`;
-      // // let url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=3.064521607198422,101.66827045945098&radius=5000&type=restaurant&key=AIzaSyBcvo-BCmcl79jG9BnDmZYHqoFpLc2CdVc`;
-      //  const resp = await nodefetch(url);
-     // //  const body = await resp.json();
-     //   console.log(body);
-        //nodefetch(url)
-        //.then((response)=> response.json())
-        //.then((data)=> {
-          //  console.log(data);
-            // if (data.status === 'OK') {
-            //     // Extract restaurant data (name and rating) from the results
-            //     const restaurants = data.results.map((result) => {
-            //       return {
-            //         name: result.name,
-            //         rating: result.rating,
-            //       };
-            //     });
-        
-            //     // Display the restaurant data
-            //     console.log(restaurants);
-            //   } else {
-            //     console.error('Error:', data.status);
-            //   }
-          //  })
-          //  .catch((error) => {
-          //    console.error('Error:', error);
-          //  });
-        }
-
-   // TODO nearbySearch from api to obtain name, ratings and distance from me
-    // async function search() {
-    //     const mapRes = await fetch(url);
-    //     const mapResObj = await mapRes.json();
-    //     console.log(mapResObj);
-    // };
+    };
 
     getFoodButton.addEventListener('click', function() {
-        update();
+      update();
     });
 
     getLocationButton.addEventListener('click', function() {
-        getLocation();
+      getLocation();
     });
+
 
     document.addEventListener('keypress', function handleKeyPress (event) {
         const action = event.key;
@@ -120,6 +69,7 @@ async function init() {
             update();
         }
     })
+
 }
 
 init();
