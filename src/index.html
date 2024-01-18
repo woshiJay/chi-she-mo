@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./styles.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>What to Eat</title>
+</head>
+
+<!-- navbar -->
+<nav class="navbar navbar-expand-lg sticky-top navbar-dark py-2 mb-5">
+  <div class="container font-monospace text-decoration-underline">
+    <ul class="nav">
+      <a href="#" class="nav-link link-body-emphasis">Home</a>
+    </ul>
+      <ul class="nav">
+        <li class="nav-item">
+          <a href="#" class="nav-link link-body-emphasis">About</a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link link-body-emphasis">Favourites</a>
+        </li>
+      </ul>
+  </div>
+</nav>
+<!-- main section -->
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="mx-auto w-50 h-50 border border-dark rounded-3">
+        <a href="#">
+        <img src="/images/banner.jpg" class="img-fluid d-flex mx-auto rounded-1" alt="logo">
+        </a>
+    </div>
+  </div>
+
+  <!-- search -->
+    <div class="container my-5">
+      <div class="row mx-auto align-items-center">
+        <div class="col">
+        <a href="#">
+          <button class="btn shadow-sm float-end">
+            <img src="/images/clover-shine-outline-icon.png" class="img-fluid" style="width: 24px; height: 24px;" alt="clover">
+          </button>
+        </a>
+        </div>
+        <div class="col-6">
+          <form class="form-inline" method="get" action="/search">
+            <input type="text" class="form-control" placeholder="Tell us your cravings..." aria-label="Search" aria-describedby="basic-addon1">
+          </form>
+        </div>
+        <div class="col">
+          <a href="#">
+          <button class="btn shadow-sm float-start">
+            <img src="/images/refresh-icon.png" class="img-fluid" style="width: 24px; height: 24px;" alt="refresh-icon">
+          </button>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Display search results -->
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-8 mx-auto">
+          <h3 class="text-left mt-4 fw-semibold">Here's what we found:</h1>
+        </div>
+        <div class="fw-light">
+          <!-- Row 1 -->
+          <div class="row">
+            <div class="col-8 mt-2 mx-auto">
+              <div class="card bg-secondary-subtle border-0">
+                <div class="card-body">
+                  <h5 class="" id="resName1">Fatt Choy Restaurant</h5>
+                  <h6 class="text-muted" id="resRating1">Ratings: 4.1</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Row 2 -->
+          <div class="row">
+            <div class="col-8 mt-2 mx-auto">
+              <div class="card bg-secondary-subtle border-0">
+                <div class="card-body">
+                  <h5 class="" id="resName2">Fatt Choy Restaurant</h5>
+                  <h6 class="text-muted" id="resRating2">Ratings: 4.1</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        <!-- Row 3 -->
+        <div class="row">
+          <div class="col-8 mt-2 mx-auto">
+            <div class="card bg-secondary-subtle border-0">
+              <div class="card-body">
+                <h6 class="" id="resName3">Fatt Choy Restaurant</h6>
+                <h6 class="text-muted" id="resRating3">Ratings: 4.1</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Row 4 -->
+        <div class="row">
+          <div class="col-8 mt-2 mx-auto">
+            <div class="card bg-secondary-subtle border-0">
+              <div class="card-body">
+                <h5 class="card-title" id="resName4">Fatt Choy Restaurant</h5>
+                <h6 class="card-subtitle text-muted" id="resRating4">Ratings: 4.1</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Row 5 -->
+        <div class="row">
+          <div class="col-8 mt-2 mx-auto">
+            <div class="card bg-secondary-subtle border-0">
+              <div class="card-body">
+                <h5 class="card-title" id="resName5">Fatt Choy Restaurant</h5>
+                <h6 class="card-subtitle text-muted" id="resRating5">Ratings: 4.1</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Next Options -->
+      <button class="btn bg-dark text-white w-25 mx-auto my-5">Next</button>
+    </div>
+  </div>    
+</body>
+<footer class="p-3 mt-5 sticky">
+  <hr class="mt-5">
+  <div class="container">
+    <div class="text-lg-start">
+        <p class="text-muted small mb-4 mb-lg-0">&copy; Chi-She-Mo 2024. All Rights Reserved.</p>
+    </div>
+  </div>
+</footer>
+
+
+
+<script src="./app.js"></script>
+</html>
