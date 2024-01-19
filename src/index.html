@@ -1,30 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="icon" href="/images/starving.gif" type="image/gif" /> -->
-    <link href="./styles.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <title>What to Eat</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/images/fried-egg.png" type="image" />
+  <link href="/src/styles/styles.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <title>What to Eat</title>
 </head>
 
 <!-- navbar -->
-<nav class="navbar navbar-expand-lg bg-warning sticky-top py-3 mb-5">
+<nav class="navbar navbar-expand-lg py-3 mb-5">
   <div class="container">
-    <div class="col fw-bold text-decoration-underline">
-      <div class="d-flex justify-content-between">
+    <div class="col fw-bold">
+      <div class="d-flex justify-content-between fw-light">
         <ul class="nav">
           <li class="nav-item">
-            <a href="#" class="nav-link link-body-emphasis">Home</a>
+            <a class="navbar-brand" href="#">
+              <img src="/images/fried-egg.png" alt="brand" class="img-fluid" width="35px" height="35px">
+            </a>
+          </li>
+          <li class="nav-item mx-1">
+            <h3 class="font-monospace">Chi_She_Mo</h3>
           </li>
         </ul>
         <ul class="nav">
-          <li class="nav-item">
+          <li class="nav-item text-decoration-underline">
             <a href="#" class="nav-link link-body-emphasis">About</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item text-decoration-underline">
             <a href="#" class="nav-link link-body-emphasis">Favourites</a>
           </li>
         </ul>
@@ -33,37 +39,44 @@
   </div>
 </nav>
 <!-- main section -->
+
 <body>
   <div class="container">
     <div class="row">
-      <div class="mx-auto w-50 h-50 border border-3 border-black rounded-4">
-        <a href="#">
-        <img src="/images/banner.jpg" class="img-fluid d-flex mx-auto rounded-1" alt="logo">
-        </a>
+      <div class="col mx-3">
+        <h3>Welcome Back, {user}.</h3>
+      </div>
     </div>
-  </div>
+    <div class="row">
+      <div class="mx-auto w-50">
+        <a href="#">
+          <img src="/images/banner.gif" class="img-fluid d-flex mx-auto rounded-1" alt="logo">
+        </a>
+      </div>
+    </div>
 
-  <!-- search -->
-    <div class="container my-5">
+    <!-- search -->
+    <div class="container">
       <div class="row mx-auto align-items-center">
         <div class="col">
-        <a href="#">
-          <button class="btn shadow-sm float-end" type="button" id="shuffleButton">
-            <!-- Button randomizes locations into the container -->
-            <img src="/images/refresh-icon.png" class="img-fluid" style="width: 24px; height: 24px;" alt="clover">
-          </button>
-        </a>
+          <a href="#">
+            <button class="btn shadow-sm float-end" type="button" id="shuffleButton">
+              <!-- Button randomizes locations into the container -->
+              <img src="/images/refresh-icon.png" class="img-fluid" style="width: 24px; height: 24px;" alt="clover">
+            </button>
+          </a>
         </div>
         <div class="col-6">
           <form class="form-inline" method="get" action="#">
-            <input type="text" id="cravingsInput" class="form-control" placeholder="Tell us your cravings..." aria-label="Search" aria-describedby="basic-addon1">
+            <input type="text" id="cravingsInput" class="form-control py-2" placeholder="Tell us your cravings..."
+              aria-label="Search" aria-describedby="basic-addon1">
           </form>
         </div>
         <div class="col">
           <a href="#">
-          <button class="btn shadow-sm float-start" type="button" id="enterButton">
-            <img src="/images/enter.png" class="img-fluid" style="width: 24px; height: 24px;" alt="refresh-icon">
-          </button>
+            <button class="btn shadow-sm float-start" type="button" id="enterButton">
+              <img src="/images/enter.png" class="img-fluid" style="width: 24px; height: 24px;" alt="refresh-icon">
+            </button>
           </a>
         </div>
       </div>
@@ -72,7 +85,7 @@
     <!-- Display search results -->
     <div class="container">
       <div class="row align-items-center">
-        <div class="col-8 mx-auto">
+        <div class="col-8 mx-auto mt-5">
           <!-- Text here should only appear after user click "Enter" or "Enter button" -->
           <h3 class="text-left mt-4 fw-semibold">Here's what we found:</h1>
         </div>
@@ -94,87 +107,96 @@
               </a>
             </div>
           </div>
-          <!-- Row 1 -->
+          <!-- Row 2 -->
           <div class="row">
             <div class="col-lg-8 mt-3 mx-auto">
               <a href="#" class="text-dark text-decoration-none">
                 <div class="d-flex align-items-center justify-content-between p-3 border shadow-sm rounded">
-                  <span class="mx-2" id="resName1">Collect Res Name from API</span>
+                  <span class="mx-2" id="resName2">Collect Res Name from API</span>
                   <div class="justify-content-end align-items-center">
                     <button type="button" id="likeButton" class="mx-2 btn like-button">
                       <a><i class="bi bi-heart i-heart"></i></a>
                     </button>
                     <span class="mx-2" id="resRating1">Ratings:</span>
-                    <span class="" id="resRating1">collect from api</span>
+                    <span class="" id="resRating2">collect from api</span>
                   </div>
                 </div>
               </a>
             </div>
           </div>
-          <!-- Row  -->
+          <!-- Row 3 -->
           <div class="row">
             <div class="col-lg-8 mt-3 mx-auto">
               <a href="#" class="text-dark text-decoration-none">
                 <div class="d-flex align-items-center justify-content-between p-3 border shadow-sm rounded">
-                  <span class="mx-2" id="resName1">Collect Res Name from API</span>
+                  <span class="mx-2" id="resName3">Collect Res Name from API</span>
                   <div class="justify-content-end align-items-center">
                     <button type="button" id="likeButton" class="mx-2 btn like-button">
                       <a><i class="bi bi-heart i-heart"></i></a>
                     </button>
-                    <span class="mx-2" id="resRating1">Ratings:</span>
-                    <span class="" id="resRating1">collect from api</span>
+                    <span class="mx-2" id="resRating3">Ratings:</span>
+                    <span class="" id="resRating3">collect from api</span>
                   </div>
                 </div>
               </a>
             </div>
           </div>
-          <!-- Row 1 -->
+          <!-- Row 4 -->
           <div class="row">
             <div class="col-lg-8 mt-3 mx-auto">
               <a href="#" class="text-dark text-decoration-none">
                 <div class="d-flex align-items-center justify-content-between p-3 border shadow-sm rounded">
-                  <span class="mx-2" id="resName1">Collect Res Name from API</span>
+                  <span class="mx-2" id="resName4">Collect Res Name from API</span>
                   <div class="justify-content-end align-items-center">
                     <button type="button" id="likeButton" class="mx-2 btn like-button">
                       <a><i class="bi bi-heart i-heart"></i></a>
                     </button>
-                    <span class="mx-2" id="resRating1">Ratings:</span>
-                    <span class="" id="resRating1">collect from api</span>
+                    <span class="mx-2" id="resRating4">Ratings:</span>
+                    <span class="" id="resRating4">collect from api</span>
                   </div>
                 </div>
               </a>
             </div>
           </div>
-          <!-- Row 1 -->
+          <!-- Row 5 -->
           <div class="row">
             <div class="col-lg-8 mt-3 mx-auto">
               <a href="#" class="text-dark text-decoration-none">
                 <div class="d-flex align-items-center justify-content-between p-3 border shadow-sm rounded">
-                  <span class="mx-2" id="resName1">Collect Res Name from API</span>
+                  <span class="mx-2" id="resName5">Collect Res Name from API</span>
                   <div class="justify-content-end align-items-center">
                     <button type="button" id="likeButton" class="mx-2 btn like-button">
                       <a><i class="bi bi-heart i-heart"></i></a>
                     </button>
-                    <span class="mx-2" id="resRating1">Ratings:</span>
-                    <span class="" id="resRating1">collect from api</span>
+                    <span class="mx-2" id="resRating5">Ratings:</span>
+                    <span class="" id="resRating5">collect from api</span>
                   </div>
                 </div>
               </a>
             </div>
           </div>
-          <!-- Row 2, 3, 4, 5 -->
-        </div>
-        <div class="d-flex justify-content-center mx-auto mt-5">
-          <button class="btn border border-1 shadow-sm px-3 bg-warning fw-bold">Load More</button>
         </div>
       </div>
-    </div>    
+    </div>
+    <!-- Page Label -->
+    <nav aria-label="..." class="d-flex justify-content-center mt-4">
+      <ul class="pagination pagination-sm">
+        <li class="page-item active" aria-current="page">
+          <span class="page-link">1</span>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+      </ul>
+    </nav>
+    <div class="d-flex justify-content-center mx-auto mt-3">
+      <button class="btn border border-1 shadow-sm p-2 fw-bold">Load More</button>
+    </div>
 </body>
 <footer class="p-3 mt-5 sticky">
   <hr class="mt-5">
   <div class="container">
     <div class="text-lg-start">
-        <p class="text-muted small mb-4 mb-lg-0">&copy; Chi-She-Mo 2024. All Rights Reserved.</p>
+      <p class="text-muted small mb-4 mb-lg-0">&copy; Chi-She-Mo 2024. All Rights Reserved.</p>
     </div>
   </div>
 </footer>
@@ -182,4 +204,5 @@
 
 <script src="/src/button.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </html>
