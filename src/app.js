@@ -1,4 +1,8 @@
+// !IMPORTANT
+// DO NOT USE APP.JS, INTEGRATING EVERYTHING INTO BUTTON.JS
+
 const searchInput = document.getElementById("searchInput");
+const enterButton = document.getElementById("enterButton");
 
 async function init() {
     // Get user current location
@@ -32,31 +36,12 @@ async function init() {
           }
     }
 
-    // TODO Need api access
-     function searchRestaurantByCoordinates(lat, lon) {
-      
-      fetch('http://localhost:5501/getRestaurants', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({lat, lon}),
-      })
-      .then(resp => resp.text())
-      .then(data => {
-        console.log("Successfully sent the request doggy yee tao", data);
-      })
-      .catch((error) => {
-        console.error("Error wtf yee tao:", error);
-      })
-      
-    };
 
     getFoodButton.addEventListener('click', function() {
       update();
     });
 
-    getLocationButton.addEventListener('click', function() {
+    enterButton.addEventListener('click', function() {
       getLocation();
     });
 
