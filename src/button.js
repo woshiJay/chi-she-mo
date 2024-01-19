@@ -23,9 +23,10 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-// Enter Button
+// Enter & Text Input
 document.addEventListener("DOMContentLoaded", function () {
   const enterButton = document.getElementById("enterButton");
+  const cravingsInput = document.getElementById("cravingsInput");
 
   function getLocation() {
     if ("geolocation" in navigator) {
@@ -33,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
         function (position) {
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
-          alert("Current user location obtained successfully.");
+          alert("User location obtained successfully.");
           console.log("Latitude: " + latitude + ", Longitude: " + longitude);
           // Pass to backend via bottom function
           searchRestaurantByCoordinates(latitude, longitude);
@@ -60,16 +61,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // via Enter Button
   enterButton.addEventListener("click", function () {
     getLocation();
   });
 
-  document.addEventListener("keypress", function handleKeyPress(event) {
-    const action = event.key;
-    console.log(action);
-
-    if (action == "Enter") {
-      getLocation();
+  // via "Enter" in textbox
+  cravingsInput.addEventListener("keydown", function (event) {
+    console.log(event);
+    if (event.key === "Enter" || event.keyCode === 13) {
+        event.preventDefault();
+        getLocation();
     }
   });
 });
@@ -85,10 +87,20 @@ function searchRestaurantByCoordinates(lat, lon) {
     .then((resp) => resp.text())
     .then((data) => {
       console.log("Sucessful Request: ", data);
+      updateUI(data); // update data to client side
     })
     .catch((error) => {
       console.error("Error: ", error);
     });
 }
+
+let currentIndex = 0;
+const resultsPerPage = 5;
+let restaurants = [];
+
+// Placing results into container
+function updateUI(restaurants) {
+
+  }
 
 // TODO Shuffle Button
