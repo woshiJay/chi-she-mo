@@ -97,13 +97,49 @@ app.get('/signout', async (req, res) => {
 // ----------------------------------------------------------------------
 // Database Routes
 // ----------------------------------------------------------------------
+const express = require('express');
+const mongoose = require('mongoose');
+require('dotenv').config();
 
+app.use(express.json()); // for parsing application/json
 
+const port_db = process.env.PORT || 3000;
 
-// YEE TAO
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
 
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('Could not connect to MongoDB', err));
 
+const itemSchema = new mongoose.Schema({
+  name: String,
+  description: String,
+  // other fields...
+});
+  
+const Item = mongoose.model('Item', itemSchema);
 
+app.get('/api/items', async (req, res) => {
+  try {
+    const items = await Item.find();
+    res.send(items);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+  
+app.put('/api/items/:id', async (req, res) => {
+  const { name, description } = req.body;
+  try {
+    const item = await Item.findByIdAndUpdate(req.params.id, { name, description }, { new: true });
+    if (!item) return res.status(404).send('Item not found');
+    res.send(item);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
 
 
 // ----------------------------------------------------------------------
