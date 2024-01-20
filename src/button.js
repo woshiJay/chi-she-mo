@@ -1,24 +1,22 @@
 // Like Button
 document.addEventListener("DOMContentLoaded", function () {
-  const likeButton = document.getElementById("likeButton");
+  const likeButton = document.querySelectorAll(".likeButton");
 
-  function likeTransition(button) {
-    const heartIcon = button.querySelector(".i-heart");
-    heartIcon.classList.toggle("bi-heart");
-    heartIcon.classList.toggle("bi-heart-fill");
+    likeButton.forEach((button) => {
+      button.addEventListener("click", function () {
+        const heartIcon = this.querySelector(".i-heart");
+        heartIcon.classList.toggle("bi-heart");
+        heartIcon.classList.toggle("bi-heart-fill");
 
     // If like-state is alive/not
     if (heartIcon.classList.contains("bi-heart-fill")) {
       alert("Added to Favourites.");
+      // TODO Proceed to add to database
     } else {
       alert("Removed from Favourites.");
+      // TODO Proceed to remove from database
     }
-
-    // TODO move the location link/address to favourites page
-  }
-
-  likeButton.addEventListener("click", function () {
-    likeTransition(this);
+    });
   });
 });
 
