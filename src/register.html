@@ -35,7 +35,7 @@
 
 <body class="bg-dark-subtle">
   <div class="container">
-    <div class="container position-relative w-50 bg-white shadow rounded">
+    <div class="container position-relative w-100 w-md-50 bg-white shadow rounded">
       <div class="row">
         <div class="col">
           <div class="d-flex justify-content-start m-3">
@@ -49,43 +49,43 @@
             <div class="d-flex justify-content-center my-3">
               <div class="form-group">
                 <h6 for="username" class="mx-2 fs-6 font-monospace">Username</h6>
-                <input type="username" class="px-5 py-2 text-start border border-dark rounded-5" id="email" required/>
+                <input type="username" class="px-5 py-2 w-100 text-start border border-dark rounded-5" id="email" required/>
               </div>
             </div>
             <div class="d-flex justify-content-center my-3">
               <div class="form-group">
                 <h6 for="email" class="mx-2 fs-6 font-monospace">Email</h6>
-                <input type="email" class="px-5 py-2 text-justify border border-dark rounded-5" id="email" required/>
+                <input type="email" class="px-5 py-2 w-100 text-justify border border-dark rounded-5" id="email" required/>
               </div>
             </div>
             <div class="d-flex justify-content-center my-3">
               <div class="form-group">
                 <h6 for="password" class="mx-2 fs-6 font-monospace">Password</h6>
-                <input type="password" class="px-5 py-2 text-justify border border-dark rounded-5" id="password" required/>
+                <input type="password" class="px-5 py-2 w-100 text-justify border border-dark rounded-5" id="password" required/>
               </div>
+            </div>
+            <div class="d-flex justify-content-center">
+              <h6 for="password" class="my-2 fs-6 text-center font-monospace">Or Sign Up With:</h6>
             </div>
             <div class="d-flex justify-content-center my-3">
-              <div class="form-group">
-                <h6 for="password" class="my-3 fs-6 text-center font-monospace">Or Sign Up With:</h6>
-                  <a href="#">
-                    <button type="submit" id="googleButton" class="btn btn-outline-secondary me-2">
-                      <img src="/images/google.png" class="img-fluid" alt="google" width="36px" height="36px">
-                    </button>
-                  </a>
-                  <a href="#">
-                    <button type="submit" id="microsoftButton" class="btn btn-outline-secondary me-2">
-                      <img src="/images/microsoft.png" class="img-fluid" alt="google" width="36px" height="36px">
-                    </button>
-                  </a>
-                  <a href="#">
-                    <button type="submit" id="githubButton" class="btn btn-outline-secondary me-2">
-                      <img src="/images/github.png" class="img-fluid" alt="google" width="36px" height="36px">
-                    </button>
-                  </a>
-              </div>
+              <a href="#">
+                <button type="submit" id="googleButton" class="btn btn-outline-secondary me-2">
+                  <img src="/images/google.png" class="img-fluid" alt="google" width="36px" height="36px">
+                </button>
+              </a>
+              <a href="#">
+                <button type="submit" id="microsoftButton" class="btn btn-outline-secondary me-2">
+                  <img src="/images/microsoft.png" class="img-fluid" alt="google" width="36px" height="36px">
+                </button>
+              </a>
+              <a href="#">
+                <button type="submit" id="githubButton" class="btn btn-outline-secondary me-2">
+                  <img src="/images/github.png" class="img-fluid" alt="google" width="36px" height="36px">
+                </button>
+              </a>
             </div>
             <div class="d-flex justify-content-center my-4">
-              <button type="submit" id="submitButton" class="btn btn-dark rounded-pill w-25">Submit</button>
+              <button type="submit" id="submitButton" class="btn btn-dark rounded-pill">Submit</button>
             </div>
             <p class="text-center">Already a member? <a href="login.html" class="text-dark">Login now</a></p>
           </form>

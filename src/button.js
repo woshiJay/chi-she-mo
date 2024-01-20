@@ -17,15 +17,14 @@ document.addEventListener("DOMContentLoaded", function () {
     // TODO move the location link/address to favourites page
   }
 
-  // Like Button
   likeButton.addEventListener("click", function () {
     likeTransition(this);
   });
 });
 
-// Enter & Text Input
+// Shuffle & Text Input
 document.addEventListener("DOMContentLoaded", function () {
-  const enterButton = document.getElementById("enterButton");
+  const shuffleButton = document.getElementById("shuffleButton");
   const cravingsInput = document.getElementById("cravingsInput");
 
   function getLocation() {
@@ -61,19 +60,19 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // via Enter Button
-  enterButton.addEventListener("click", function () {
+  // via Shuffle Button
+  shuffleButton.addEventListener("click", function () {
     getLocation();
   });
 
-  // via "Enter" in textbox
-  cravingsInput.addEventListener("keydown", function (event) {
-    console.log(event);
-    if (event.key === "Enter" || event.keyCode === 13) {
-        event.preventDefault();
-        getLocation();
-    }
-  });
+  // via "Enter" in textbox - for search
+  // cravingsInput.addEventListener("keydown", function (event) {
+  //   console.log(event);
+  //   if (event.key === "Enter" || event.keyCode === 13) {
+  //       event.preventDefault();
+  //       getLocation();
+  //   }
+  // });
 });
 
 function searchRestaurantByCoordinates(lat, lon) {
