@@ -94,6 +94,17 @@ app.get('/signout', async (req, res) => {
       });
 });
 
+// Get username route
+app.get('/get-username', async (req, res) => {
+  const userId = req.query.uid;
+  if (!userId) {
+      return res.status(400).json({ alert: "User ID is required!" });
+  }
+
+  // get username from database here and return back to frontend
+  
+});
+
 // ----------------------------------------------------------------------
 // Database Routes
 // ----------------------------------------------------------------------
