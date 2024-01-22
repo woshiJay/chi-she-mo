@@ -49,6 +49,7 @@
     <div class="row">
       <div class="col mx-3">
         <h3>Welcome Back, {user}.</h3>
+        <h4 class="fw-lighter">What shall we eat today?</h4>
       </div>
     </div>
     <div class="row">
@@ -64,25 +65,34 @@
       <div class="row mx-auto align-items-center">
         <div class="col">
           <a href="#">
-            <button class="btn shadow-sm float-end" type="button" id="shuffleButton">
+            <button class="btn d-none d-sm-block shadow-sm float-end" type="button" id="shuffleButton">
               <!-- Button randomizes locations into the container -->
               <img src="/images/refresh-icon.png" class="img-fluid" style="width: 24px; height: 24px;" alt="clover">
             </button>
           </a>
         </div>
-        <div class="col-6">
+        <div class="col-8 col-md-8 mx-auto">
           <form class="form-inline" method="get" action="#">
-            <input type="text" id="cravingsInput" class="form-control py-2" placeholder="Tell us your cravings..."
+            <input type="text" id="cravingsInput" class="form-control py-2 w-100 rounded-5" placeholder="Tell us your cravings..."
               aria-label="Search" aria-describedby="basic-addon1">
           </form>
         </div>
         <div class="col">
           <a href="#">
-            <button class="btn shadow-sm float-start" type="button" id="enterButton">
+            <button class="btn d-none d-sm-block shadow-sm float-start" type="button" id="enterButton">
               <img src="/images/enter.png" class="img-fluid" style="width: 24px; height: 24px;" alt="refresh-icon">
             </button>
           </a>
         </div>
+      </div>
+    </div>
+    <!-- Small screen size -->
+    <div class="row d-sm-none d-md-none d-lg-none">
+      <div class="col col-sm-12 mx-auto mt-5 mt-sm-0 text-center">
+        <button class="btn btn-dark px-4 py-2 rounded-5" type="button" id="enterButton">Enter</button>
+      </div>
+      <div class="col-12 mt-4 text-center">
+        <a href="#" class="mt-2 text-black">Feeling Hungry?</a>
       </div>
     </div>
 
