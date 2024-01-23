@@ -108,14 +108,87 @@ app.get('/get-username', async (req, res) => {
 // ----------------------------------------------------------------------
 // Database Routes
 // ----------------------------------------------------------------------
+const express = require('express');
+const mongoose = require('mongoose');
+require('dotenv').config();
 
+app.use(express.json()); // for parsing application/json
 
+const port_db = process.env.PORT || 3000;
 
-// YEE TAO
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
 
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('Could not connect to MongoDB', err));
 
+// User Schema
+const userSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+  // other user fields...
+});
 
+const User = mongoose.model('User', userSchema);
 
+// Restaurant Schema
+const restaurantSchema = new mongoose.Schema({
+  name: String,
+  address: String,
+  cuisine: String,
+  // other restaurant fields...
+});
+
+const Restaurant = mongoose.model('Restaurant', restaurantSchema);
+
+// UserRestaurant Schema
+const userRestaurantSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  restaurantId: { type: mongoose.Schema.Types.ObjectId, ref: 'Restaurant' },
+  visitedDate: Date,
+  rating: Number,
+  // other fields to represent the relationship...
+});
+
+const UserRestaurant = mongoose.model('UserRestaurant', userRestaurantSchema);
+
+app.post('/api/users', async (req, res) => {
+  try {
+    let user = new User(req.body);
+    user = await user.save();
+    res.send(user);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+// Create a new restaurant
+app.post('/api/restaurants', async (req, res) => {
+  try {
+    let restaurant = new Restaurant(req.body);
+    restaurant = await restaurant.save();
+    res.send(restaurant);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+// Create a new user-restaurant relationship
+app.post('/api/user_restaurants', async (req, res) => {
+  try {
+    let userRestaurant = new UserRestaurant(req.body);
+    userRestaurant = await userRestaurant.save();
+    res.send(userRestaurant);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+// ... other routes ...
+
+app.listen(3000, () => console.log('Server running on port 3000'));
 
 // ----------------------------------------------------------------------
 // Places API
