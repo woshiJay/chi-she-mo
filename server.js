@@ -108,17 +108,8 @@ app.get('/get-username', async (req, res) => {
 // ----------------------------------------------------------------------
 // Database Routes
 // ----------------------------------------------------------------------
-const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
-
-app.use(express.json()); // for parsing application/json
-
-const port_db = process.env.PORT || 3000;
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connected to MongoDB'))
@@ -188,7 +179,6 @@ app.post('/api/user_restaurants', async (req, res) => {
 
 // ... other routes ...
 
-app.listen(3000, () => console.log('Server running on port 3000'));
 
 // ----------------------------------------------------------------------
 // Places API
@@ -212,9 +202,9 @@ app.post("/getRestaurants", async (req, res) => {
     // // API Data
     // const restaurantData = apiData.results.map((place) => ({
     //   name: place.name,
-    //   rating: place.rating,
-    //   price_level: place.price_level,
-    //   user_ratings_total: place.user_ratings_total,
+    //   rating: place.rating || "",
+    //   price_level: place.price_level || "",
+    //   user_ratings_total: place.user_ratings_total || "",
     // }));
 
     // res.json(restaurantData);
