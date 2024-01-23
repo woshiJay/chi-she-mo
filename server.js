@@ -177,8 +177,39 @@ app.post('/api/user_restaurants', async (req, res) => {
   }
 });
 
-// ... other routes ...
+app.delete('/api/delete_user_restaurants', async (req, res) => {
+  try {
+      const { userId, restaurantId } = req.query;
+      
+      if (!userId || !restaurantId) {
+          return res.status(400).send('Missing userId or restaurantId');
+      }
 
+      const result = await UserRestaurant.deleteOne({ 
+          userId: mongoose.Types.ObjectId(userId), 
+          restaurantId: mongoose.Types.ObjectId(restaurantId) 
+      });
+
+      if (result.deletedCount === 0) {
+          return res.status(404).send('UserRestaurant not found');
+      }
+
+      res.send({ message: 'UserRestaurant deleted successfully' });
+  } catch (error) {
+      res.status(500).send(error);
+  }
+});
+
+// ... other routes ...
+// // example for adding user
+// const newUser = new User({
+//   name: 'John Doe',
+//   email: 'johndoe@example.com'
+// });
+
+// newUser.save()
+//   .then(doc => console.log('User added:', doc))
+//   .catch(err => console.error('Error adding user:', err));
 
 // ----------------------------------------------------------------------
 // Places API
