@@ -145,6 +145,7 @@ const userRestaurantSchema = new mongoose.Schema({
 
 const UserRestaurant = mongoose.model('UserRestaurant', userRestaurantSchema);
 
+// add user to the database
 app.post('/api/users', async (req, res) => {
   try {
     let user = new User(req.body);
@@ -177,6 +178,7 @@ app.post('/api/user_restaurants', async (req, res) => {
   }
 });
 
+// when unlike, delete from database 
 app.delete('/api/delete_user_restaurants', async (req, res) => {
   try {
       const { userId, restaurantId } = req.query;
