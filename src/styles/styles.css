@@ -10933,3 +10933,18 @@ footer.footer {
   padding-top: 4rem;
   padding-bottom: 4rem;
 }
+
+/* Custom Additions */
+.search-container {
+  visibility: hidden;
+  opacity: 0; 
+  transform: translateX(-100%);
+  transition: visibility 0s linear 0.5s, opacity 0.5s linear, transform 0.5s ease-in-out;
+}
+
+.search-container.show {
+  visibility: visible; 
+  opacity: 1;
+  transform: translateX(0%);
+  transition-delay: 0s;
+}

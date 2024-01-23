@@ -20,10 +20,9 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-// Shuffle & Text Input
+// Randomize Results
 document.addEventListener("DOMContentLoaded", function () {
-  const shuffleButton = document.getElementById("shuffleButton");
-  const cravingsInput = document.getElementById("cravingsInput");
+  const shuffleButton = document.querySelectorAll(".shuffleButton");
 
   function getLocation() {
     if ("geolocation" in navigator) {
@@ -59,19 +58,50 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // via Shuffle Button
-  shuffleButton.addEventListener("click", function () {
-    getLocation();
+  shuffleButton.forEach((button) => {
+    button.addEventListener("click", function () {
+      getLocation();
+    });
   });
-
-  // via "Enter" in textbox - for search
-  // cravingsInput.addEventListener("keydown", function (event) {
-  //   console.log(event);
-  //   if (event.key === "Enter" || event.keyCode === 13) {
-  //       event.preventDefault();
-  //       getLocation();
-  //   }
-  // });
 });
+
+// Show search container when "enter" is pressed
+document.addEventListener("DOMContentLoaded", function () {
+  const enterButton = document.querySelectorAll(".enterButton");
+  const cravingsInput = document.getElementById("cravingsInput");
+  const showSearch = document.getElementById("showSearch");
+
+  function toggleSearchDisplay() {
+    if (showSearch.classList.contains("d-none")) {
+      showSearch.classList.remove("d-none");
+      requestAnimationFrame(() => {
+        showSearch.classList.add("show");
+      });
+  
+    } else {
+      showSearch.classList.remove("show");
+      showSearch.addEventListener("transitionend", function handler() {
+        showSearch.classList.add("d-none");
+        showSearch.removeEventListener("transitionend", handler);
+      });
+    }
+  }
+
+  cravingsInput.addEventListener("keydown", function (event) {
+    if (event.key === "Enter" || event.keyCode === 13) {
+      event.preventDefault();
+      // here needs to check whether the results are obtained from server yet or not
+      toggleSearchDisplay();
+    }
+  });
+  enterButton.forEach((button) => {
+    button.addEventListener("click", function () {
+    // here needs to check whether the results are obtained from server yet or not
+    toggleSearchDisplay();    
+    });
+  });
+});
+
 
 function searchRestaurantByCoordinates(lat, lon) {
   fetch("http://localhost:5501/getRestaurants", {
