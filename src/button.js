@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-function getLocation() {
+function getLocation(event) {
   if ("geolocation" in navigator) {
     navigator.geolocation.getCurrentPosition(
       function (position) {
@@ -44,7 +44,12 @@ function getLocation() {
         alert("User location obtained successfully.");
         console.log("Latitude: " + latitude + ", Longitude: " + longitude);
         // Pass to backend via bottom function
-        searchRestaurantByCoordinates(latitude, longitude);
+        // If "shuffleButton" is clicked, then "searchRestaurantByCoordinates", else "searchRestaurantByUserRequest"
+        if (event.target.classList.contains("shuffleButton")) {
+          searchRestaurantByCoordinates(latitude, longitude);
+        } else {
+          searchRestaurantByUserRequest(latitude, longitude);
+        }
       },
       function (error) {
         switch (error.code) {
@@ -87,6 +92,66 @@ function searchRestaurantByCoordinates(lat, lon) {
     });
 }
 
+// ----------------------------------------------------------------------
+
+let allRestaurants = []; // This will store all fetched restaurants
+let currentIndex = 0; // This will keep track of the current index
+const resultsPerPage = 5; // Number of results per page
+
+// Function to update the UI with restaurant data
+function displayRestaurants() {
+  const container = document.getElementById('restaurantContainer'); // Assuming you have a container for the restaurants
+  container.innerHTML = ''; // Clear current restaurants
+
+  // Get the subset of restaurants to display
+  const restaurantsToDisplay = allRestaurants.slice(currentIndex, currentIndex + resultsPerPage);
+
+  // Create HTML for each restaurant and append to the container
+  restaurantsToDisplay.forEach((restaurant) => {
+    const restaurantElement = document.createElement('div');
+    restaurantElement.innerHTML = `
+      <div>${restaurant.name}</div>
+      <div>Ratings: ${restaurant.rating}</div>
+    `;
+    container.appendChild(restaurantElement);
+  });
+}
+
+// Function to load more restaurants
+function loadMoreRestaurants() {
+  currentIndex += resultsPerPage;
+  displayRestaurants();
+  // Show previous button if currentIndex is greater than 0
+  document.getElementById('prevButton').style.display = currentIndex > 0 ? 'block' : 'none';
+  // Show next button if there are more restaurants to display
+  document.getElementById('nextButton').style.display = (currentIndex + resultsPerPage) < allRestaurants.length ? 'block' : 'none';
+}
+
+// Function to go back to previous restaurants
+function previousRestaurants() {
+  currentIndex -= resultsPerPage;
+  if (currentIndex < 0) currentIndex = 0;
+  displayRestaurants();
+  // Show or hide buttons accordingly
+  document.getElementById('prevButton').style.display = currentIndex > 0 ? 'block' : 'none';
+  document.getElementById('nextButton').style.display = 'block';
+}
+
+// Initial function to fetch restaurants
+function fetchRestaurants() {
+  // Your fetch code here
+  // After fetching, set allRestaurants and call displayRestaurants
+}
+
+// Call fetchRestaurants initially to load the first set of restaurants
+fetchRestaurants();
+
+// Add event listeners to your next and previous buttons
+document.getElementById('nextButton').addEventListener('click', loadMoreRestaurants);
+document.getElementById('prevButton').addEventListener('click', previousRestaurants);
+
+// ----------------------------------------------------------------------
+
 // Specific Search for nearby restaurants
 function searchRestaurantByUserRequest(lat, lon) {
   fetch("http://localhost:5501/getSearchedRestaurants", {
@@ -112,8 +177,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // via Shuffle Button
   shuffleButton.forEach((button) => {
-    button.addEventListener("click", function () {
-      getLocation();
+    button.addEventListener("click", function (event) {
+      getLocation(event);
     });
   });
 });

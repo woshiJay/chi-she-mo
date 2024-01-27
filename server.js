@@ -232,16 +232,6 @@ app.post("/getRestaurants", async (req, res) => {
     console.log("Reply from Server");
     console.log(apiData);
 
-    // // API Data
-    // const restaurantData = apiData.results.map((place) => ({
-    //   name: place.name,
-    //   rating: place.rating || "",
-    //   price_level: place.price_level || "",
-    //   user_ratings_total: place.user_ratings_total || "",
-    // }));
-
-    // res.json(restaurantData);
-
   } catch (error) {
     res.status(500).send({ error: "Error Fetching Data." });
   }
