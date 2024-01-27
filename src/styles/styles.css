@@ -95,6 +95,11 @@ body {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
+/* body .dark-theme {
+  background-color: var(--bs-body-color);
+  color: var(--bs-body-bg);
+} */
+
 hr {
   margin: 1rem 0;
   color: inherit;
@@ -10973,5 +10978,6 @@ footer.footer {
 .spacer {
   height: 200px;
 }
+
 
 

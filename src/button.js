@@ -1,3 +1,18 @@
+// Theme 
+document.addEventListener("DOMContentLoaded", function() {
+  const lightThemeButton = document.getElementById('lightTheme');
+  const darkThemeButton = document.getElementById('darkTheme');
+  const bodyElement = document.body;
+
+  lightThemeButton.addEventListener('click', function() {
+    bodyElement.classList.remove('dark-theme');
+  });
+
+  darkThemeButton.addEventListener('click', function() {
+    bodyElement.classList.add('dark-theme');
+  });
+});
+
 // Like Button
 document.addEventListener("DOMContentLoaded", function () {
   const likeButton = document.querySelectorAll(".likeButton");
