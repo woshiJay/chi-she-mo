@@ -10952,13 +10952,18 @@ footer.footer {
 /* Styles for Landing */
 @keyframes floatUp {
   from {
-    transform: translateY(100%);
+    transform: translateY(-100%);
     opacity: 0;
   }
   to {
     transform: translateY(0);
     opacity: 1;
   }
+}
+
+.cover-container {
+  flex-grow: 1;
+  min-height: calc(100vh - 60px);
 }
 
 .cover-container .row .col {
@@ -10968,3 +10973,5 @@ footer.footer {
 .spacer {
   height: 200px;
 }
+
+
