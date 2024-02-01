@@ -232,6 +232,14 @@ app.post("/getRestaurants", async (req, res) => {
     console.log("Reply from Server");
     console.log(apiData);
 
+    const restaurants = apiData.results.map((restaurant) => ({
+      name: restaurant.name,
+      rating: restaurant.rating
+    }));
+    console.log("Values to pass: " + restaurants);
+
+    res.json(restaurants);
+
   } catch (error) {
     res.status(500).send({ error: "Error Fetching Data." });
   }
