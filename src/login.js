@@ -1,5 +1,3 @@
-const { response } = require("express");
-
 const submitButton = document.getElementById('submitButton')
 submitButton.addEventListener('click', () => {
     const email = document.getElementById('email').value;
