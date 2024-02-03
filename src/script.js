@@ -1,3 +1,6 @@
+// Ensure that the content is not displayed initially
+let isContentDisplayed = false;
+
 // Theme 
 document.addEventListener("DOMContentLoaded", function() {
   const lightThemeButton = document.getElementById('lightTheme');
@@ -129,25 +132,29 @@ function updateRestaurantContainer(restaurants) {
   console.log("Container Updated");
   
   // // Display container once results are obtained
-  toggleSearchDisplay();
+  toggleSearchDisplay(true);
 
-  // TODO Fix issue of container closing if shuffle button is clicked again
 };
 
-function toggleSearchDisplay() {
+function toggleSearchDisplay(forceShow = false) {
   const showSearch = document.getElementById("showSearch");
 
-  if (showSearch.classList.contains("show")) {
+  // Check if we are forcing the display (e.g., new content loaded)
+  // Or toggle based on current state if not forcing
+  if (forceShow || !isContentVisible) {
+    showSearch.style.display = "block";
+    // Force a reflow
+    void showSearch.offsetWidth;
+    showSearch.classList.add("show");
+    isContentVisible = true; // Update state to visible
+  } else if (isContentVisible && !forceShow) {
     showSearch.classList.remove("show");
     showSearch.addEventListener("transitionend", function handler() {
       showSearch.style.display = "none";
       showSearch.removeEventListener("transitionend", handler);
     });
-  } else {
-    showSearch.style.display = "block";
-    void showSearch.offsetWidth;
-    showSearch.classList.add("show");
-    }
+    isContentVisible = false; // Update state to not visible
+  }
 }
 
 // Randomize Results
