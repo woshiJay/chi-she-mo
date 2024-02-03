@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-function getLocation(event) {
+function getLocation(event, userInput) {
   if ("geolocation" in navigator) {
     navigator.geolocation.getCurrentPosition(
       function (position) {
@@ -43,13 +43,13 @@ function getLocation(event) {
         const longitude = position.coords.longitude;
         alert("User location obtained successfully.");
         console.log("Latitude: " + latitude + ", Longitude: " + longitude);
-        console.log(event);
+        console.log(event, "+", userInput);
         // Pass to backend via bottom function
         // If "shuffleButton" is clicked, then "searchRestaurantByCoordinates", else "searchRestaurantByUserRequest"
         if (event.target.classList.contains("shuffleButton")) {
           searchRestaurantByCoordinates(latitude, longitude);
-        } else {
-          searchRestaurantByUserRequest(latitude, longitude);
+        } else if (event.target.classList.contains("enterButton")){
+          searchRestaurantByUserRequest(latitude, longitude, userInput);
         }
       },
       function (error) {
@@ -83,32 +83,31 @@ function searchRestaurantByCoordinates(lat, lon) {
     },
     body: JSON.stringify({ lat, lon }),
   })
-    .then((resp) => resp.text())
+    .then((resp) => resp.json())
     .then((restaurants) => {
       console.log("Sucessful Request: ", restaurants);
       // Update for every restaurant container
-      restaurants.forEach((restaurant) => {
-        updateRestaurantContainer(restaurant);
-      });
+        updateRestaurantContainer(restaurants);
     })
     .catch((error) => {
       console.error("Error: ", error);
     });
 }
 
-// Specific Search for nearby restaurants
-function searchRestaurantByUserRequest(lat, lon) {
+// Based on Search Request for nearby restaurants
+function searchRestaurantByUserRequest(lat, lon, userInput) {
   fetch("http://localhost:5501/getSearchedRestaurants", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ lat, lon }),
+    body: JSON.stringify({ lat, lon, userInput }),
   })
-    .then((resp) => resp.text())
-    .then((data) => {
-      console.log("Sucessful Request: ", data);
-      updateUI(data); // update data to client side
+    .then((resp) => resp.json())
+    .then((restaurants) => {
+      console.log("Sucessful Request: ", restaurants);
+      // Update for every restaurant container
+        updateRestaurantContainer(restaurants);
     })
     .catch((error) => {
       console.error("Error: ", error);
@@ -116,18 +115,40 @@ function searchRestaurantByUserRequest(lat, lon) {
 }
 
 // Update Container
-function updateRestaurantContainer(restaurant) {
-  const restaurantNames = document.querySelectorAll('.resName');
-  const restaurantRatings = document.querySelectorAll('.resRating');
+function updateRestaurantContainer(restaurants) {
+  const restaurantName = document.querySelectorAll(".resName");
+  const restaurantRating = document.querySelectorAll(".resRating");
 
-  restaurantNames.forEach(() => {
-    restaurantNames.innerHTML = restaurant.name;
+  // Update for every restaurant container
+  restaurants.forEach((restaurant, index) => {
+    if (index < restaurantName.length && index < restaurantRating.length) {
+      restaurantName[index].textContent = restaurant.name;
+      restaurantRating[index].textContent = restaurant.rating;
+    }
   });
+  console.log("Container Updated");
+  
+  // // Display container once results are obtained
+  toggleSearchDisplay();
 
-  restaurantRatings.forEach(() => {
-    restaurantRatings.innerHTML = restaurant.rating;
-  });
+  // TODO Fix issue of container closing if shuffle button is clicked again
 };
+
+function toggleSearchDisplay() {
+  const showSearch = document.getElementById("showSearch");
+
+  if (showSearch.classList.contains("show")) {
+    showSearch.classList.remove("show");
+    showSearch.addEventListener("transitionend", function handler() {
+      showSearch.style.display = "none";
+      showSearch.removeEventListener("transitionend", handler);
+    });
+  } else {
+    showSearch.style.display = "block";
+    void showSearch.offsetWidth;
+    showSearch.classList.add("show");
+    }
+}
 
 // Randomize Results
 document.addEventListener("DOMContentLoaded", function () {
@@ -141,48 +162,23 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-// Choose to display container result based on "shuffle" or "enter" button
-document.addEventListener("DOMContentLoaded", function () {
-  const enterButton = document.querySelectorAll(".enterButton");
-  const shuffleButton = document.querySelectorAll(".shuffleButton");
+// Based on User Search Request
+document.addEventListener("DOMContentLoaded", function () { 
   const cravingsInput = document.getElementById("cravingsInput");
-  const showSearch = document.getElementById("showSearch");
-
-  function toggleSearchDisplay() {
-    if (showSearch.classList.contains("show")) {
-      showSearch.classList.remove("show");
-      showSearch.addEventListener("transitionend", function handler() {
-        showSearch.style.display = "none";
-        showSearch.removeEventListener("transitionend", handler);
-      });
-    } else {
-      showSearch.style.display = "block";
-      void showSearch.offsetWidth;
-      showSearch.classList.add("show");
-      }
-  }
+  const enterButton = document.querySelectorAll(".enterButton");
 
   cravingsInput.addEventListener("keydown", function (event) {
     if (event.key === "Enter" || event.keyCode === 13) {
       event.preventDefault();
-      // here needs to check whether the results are obtained from server yet or not
-      toggleSearchDisplay();
+      const userInput = cravingsInput.value;
+      getLocation(event, userInput);
     }
   });
-  shuffleButton
-    .forEach((button) => {
-      button.addEventListener("click", function () {
-      // here needs to check whether the results are obtained from server yet or not
-      toggleSearchDisplay();
-      });
-    });
+
   enterButton.forEach((button) => {
-    button.addEventListener("click", function () {
-    // here needs to check whether the results are obtained from server yet or not
-    toggleSearchDisplay();    
+    button.addEventListener("click", function (event) {
+      const userInput = cravingsInput.value;
+      getLocation(event, userInput);
     });
   });
 });
-
-
-// TODO Shuffle Button
