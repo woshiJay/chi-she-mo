@@ -1,3 +1,6 @@
+// Ensure that the content is not displayed initially
+let isContentDisplayed = false;
+
 // Theme 
 document.addEventListener("DOMContentLoaded", function() {
   const lightThemeButton = document.getElementById('lightTheme');
@@ -35,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-function getLocation() {
+function getLocation(event, userInput) {
   if ("geolocation" in navigator) {
     navigator.geolocation.getCurrentPosition(
       function (position) {
@@ -43,8 +46,14 @@ function getLocation() {
         const longitude = position.coords.longitude;
         alert("User location obtained successfully.");
         console.log("Latitude: " + latitude + ", Longitude: " + longitude);
+        console.log(event, "+", userInput);
         // Pass to backend via bottom function
-        searchRestaurantByCoordinates(latitude, longitude);
+        // If "shuffleButton" is clicked, then "searchRestaurantByCoordinates", else "searchRestaurantByUserRequest"
+        if (event.target.classList.contains("shuffleButton")) {
+          searchRestaurantByCoordinates(latitude, longitude);
+        } else if (event.target.classList.contains("enterButton")){
+          searchRestaurantByUserRequest(latitude, longitude, userInput);
+        }
       },
       function (error) {
         switch (error.code) {
@@ -77,33 +86,75 @@ function searchRestaurantByCoordinates(lat, lon) {
     },
     body: JSON.stringify({ lat, lon }),
   })
-    .then((resp) => resp.text())
-    .then((data) => {
-      console.log("Sucessful Request: ", data);
-      updateUI(data); // update data to client side
+    .then((resp) => resp.json())
+    .then((restaurants) => {
+      console.log("Sucessful Request: ", restaurants);
+      // Update for every restaurant container
+        updateRestaurantContainer(restaurants);
     })
     .catch((error) => {
       console.error("Error: ", error);
     });
 }
 
-// Specific Search for nearby restaurants
-function searchRestaurantByUserRequest(lat, lon) {
+// Based on Search Request for nearby restaurants
+function searchRestaurantByUserRequest(lat, lon, userInput) {
   fetch("http://localhost:5501/getSearchedRestaurants", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ lat, lon }),
+    body: JSON.stringify({ lat, lon, userInput }),
   })
-    .then((resp) => resp.text())
-    .then((data) => {
-      console.log("Sucessful Request: ", data);
-      updateUI(data); // update data to client side
+    .then((resp) => resp.json())
+    .then((restaurants) => {
+      console.log("Sucessful Request: ", restaurants);
+      // Update for every restaurant container
+        updateRestaurantContainer(restaurants);
     })
     .catch((error) => {
       console.error("Error: ", error);
     });
+}
+
+// Update Container
+function updateRestaurantContainer(restaurants) {
+  const restaurantName = document.querySelectorAll(".resName");
+  const restaurantRating = document.querySelectorAll(".resRating");
+
+  // Update for every restaurant container
+  restaurants.forEach((restaurant, index) => {
+    if (index < restaurantName.length && index < restaurantRating.length) {
+      restaurantName[index].textContent = restaurant.name;
+      restaurantRating[index].textContent = restaurant.rating;
+    }
+  });
+  console.log("Container Updated");
+  
+  // // Display container once results are obtained
+  toggleSearchDisplay(true);
+
+};
+
+function toggleSearchDisplay(forceShow = false) {
+  const showSearch = document.getElementById("showSearch");
+
+  // Check if we are forcing the display (e.g., new content loaded)
+  // Or toggle based on current state if not forcing
+  if (forceShow || !isContentVisible) {
+    showSearch.style.display = "block";
+    // Force a reflow
+    void showSearch.offsetWidth;
+    showSearch.classList.add("show");
+    isContentVisible = true; // Update state to visible
+  } else if (isContentVisible && !forceShow) {
+    showSearch.classList.remove("show");
+    showSearch.addEventListener("transitionend", function handler() {
+      showSearch.style.display = "none";
+      showSearch.removeEventListener("transitionend", handler);
+    });
+    isContentVisible = false; // Update state to not visible
+  }
 }
 
 // Randomize Results
@@ -112,55 +163,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // via Shuffle Button
   shuffleButton.forEach((button) => {
-    button.addEventListener("click", function () {
-      getLocation();
+    button.addEventListener("click", function (event) {
+      getLocation(event);
     });
   });
 });
 
-// Show search container when "enter" is pressed
-document.addEventListener("DOMContentLoaded", function () {
-  const enterButton = document.querySelectorAll(".enterButton");
+// Based on User Search Request
+document.addEventListener("DOMContentLoaded", function () { 
   const cravingsInput = document.getElementById("cravingsInput");
-  const showSearch = document.getElementById("showSearch");
-
-  function toggleSearchDisplay() {
-    if (showSearch.classList.contains("show")) {
-      showSearch.classList.remove("show");
-      showSearch.addEventListener("transitionend", function handler() {
-        showSearch.style.display = "none";
-        showSearch.removeEventListener("transitionend", handler);
-      });
-    } else {
-      showSearch.style.display = "block";
-      void showSearch.offsetWidth;
-      showSearch.classList.add("show");
-      }
-  }
+  const enterButton = document.querySelectorAll(".enterButton");
 
   cravingsInput.addEventListener("keydown", function (event) {
     if (event.key === "Enter" || event.keyCode === 13) {
       event.preventDefault();
-      // here needs to check whether the results are obtained from server yet or not
-      toggleSearchDisplay();
+      const userInput = cravingsInput.value;
+      getLocation(event, userInput);
     }
   });
+
   enterButton.forEach((button) => {
-    button.addEventListener("click", function () {
-    // here needs to check whether the results are obtained from server yet or not
-    toggleSearchDisplay();    
+    button.addEventListener("click", function (event) {
+      const userInput = cravingsInput.value;
+      getLocation(event, userInput);
     });
   });
 });
-
-
-let currentIndex = 0;
-const resultsPerPage = 5;
-let restaurants = [];
-
-// Placing results into container
-function updateUI(restaurants) {
-
-  }
-
-// TODO Shuffle Button
