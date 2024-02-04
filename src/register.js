@@ -1,9 +1,16 @@
-const registrationButton = document.getElementById('registerButton');
-registrationButton.addEventListener('click', () => {
-    const username = document.getElementById('username').value;
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    console.log("Button clicked!")
+document.addEventListener('DOMContentLoaded', () => {
+    registration();
+});
+
+function registration() {
+
+    const registerButton = document.getElementById('registerButton');
+
+    registerButton.addEventListener("click", () => {
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        console.log("Button clicked!")
 
     fetch('http://localhost:5501/signup', {
             method: 'POST',
@@ -26,3 +33,4 @@ registrationButton.addEventListener('click', () => {
             console.error("Error:", error);
         })
 })
+}

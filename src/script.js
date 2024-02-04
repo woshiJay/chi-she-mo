@@ -7,8 +7,9 @@ const itemsPerPage = 5;
 document.addEventListener("DOMContentLoaded", async function() {
   // initializeThemeToggle();
   initializeLikeButtons();
-  initializeLocationAndSearch();
   initializeLoadMoreButton();
+  initializeBackButton();
+  initializeLocationAndSearch();
 });
 
 function initializeThemeToggle() {
@@ -36,9 +37,18 @@ function initializeLikeButtons() {
 function initializeLoadMoreButton() {
   const loadMoreButton = document.getElementById("loadMoreButton");
 
-  loadMoreButton.addEventListener("click", (event) => {
+  loadMoreButton.addEventListener("click", () => {
     // Load more results
     updateRestaurantContainer();
+  });
+}
+
+function initializeBackButton() {
+  const backButton = document.getElementById("backButton");
+
+  backButton.addEventListener("click", () => {
+      currentIndex -= itemsPerPage * 2;
+      updateRestaurantContainer();
   });
 }
 
@@ -96,7 +106,8 @@ async function searchRestaurantByCoordinates(lat, lon) {
       currentResults = await response.json();
       currentIndex = 0;
       console.log("Successful Request:", currentResults);
-      updateRestaurantContainer();
+      updatePagination(currentIndex, currentResults.length, itemsPerPage); // Update pagination
+      updateRestaurantContainer(); // Update restaurant container
   } catch (error) {
       console.error("Error:", error);
   }
@@ -112,6 +123,7 @@ async function searchRestaurantByUserRequest(lat, lon, userInput) {
       currentResults = await response.json();
       currentIndex = 0;
       console.log("Successful Request:", currentResults);
+      updatePagination(currentIndex, currentResults.length, itemsPerPage);
       updateRestaurantContainer();
   } catch (error) {
       console.error("Error:", error);
@@ -121,25 +133,57 @@ async function searchRestaurantByUserRequest(lat, lon, userInput) {
 function updateRestaurantContainer() {
   const restaurantNameElements = document.querySelectorAll(".resName");
   const restaurantRatingElements = document.querySelectorAll(".resRating");
+  const backButton = document.getElementById("backButton");
+  const loadMoreButton = document.getElementById("loadMoreButton");
 
   const showEachResults = currentResults.slice(currentIndex, currentIndex + itemsPerPage);
   showEachResults.forEach((restaurant, index) => {
       if (index < restaurantNameElements.length) {
           restaurantNameElements[index].textContent = restaurant.name;
           restaurantRatingElements[index].textContent = restaurant.rating;
+      } else {
+        // clear remaining containers if there are no more results left
+          restaurantNameElements[index].textContent = "";
+          restaurantRatingElements[index].textContent = "";
       }
   });
 
-  // If there are no more results to show, hide the load more button
-  if (currentIndex + itemsPerPage >= currentResults.length) {
-      const loadMoreButton = document.getElementById("loadMoreButton");
-      loadMoreButton.style.display = "none";
-  } else {
-    currentIndex += itemsPerPage;
-  }
+  currentIndex += itemsPerPage;
+
+  // Hide/Show backButton based on current index
+  backButton.style.display = currentIndex > itemsPerPage ? "block" : "none";
+
+  // Hide/Show loadMoreButton based on current index
+  loadMoreButton.style.display = (currentIndex < currentResults.length) ? "block" : "none";
 
   console.log("Container Updated");
   toggleSearchDisplay(true);
+  updatePagination(currentIndex, currentResults.length, itemsPerPage);
+}
+
+function updatePagination(currentIndex, totalResults, itemsPerPage) {
+  const pagination = document.querySelector(".pagination");
+  const totalPages = Math.ceil(totalResults / itemsPerPage);
+  const currentPage = Math.floor(currentIndex / itemsPerPage) + 1;
+
+  // Clear pagination
+  pagination.innerHTML = "";
+
+  // Generate pagination
+  for (let i = 1; i <= totalPages; i++) {
+    const pageItem = document.createElement("li");
+    pageItem.className = "page-item ${currentIndex === i * itemsPerPage ? 'active' : ''}"; // Active if user on current page
+    pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`; // Page number
+
+    // Click listener
+    pageItem.querySelector("a").addEventListener("click", (e) => {
+      e.preventDefault();
+      currentIndex = (i - 1) * itemsPerPage;
+      console.log("Current Index: ", currentIndex);
+      updateRestaurantContainer();
+    });
+    pagination.appendChild(pageItem);
+  }
 }
 
 function toggleSearchDisplay(forceShow = true) {

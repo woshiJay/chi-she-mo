@@ -170,11 +170,13 @@ app.post('/signup', async (req, res) => {
               res.status(400).json({ alert: error.code })
           }
       })
-
-  const userId = userRecord.uid;
-  const userRef = db.ref(`users/${userId}`);
-  await userRef.set({ username: username })
-  res.status(200).json({ redirect: '/src/login.html' });
+  // add user to the database
+  if (userRecord) {
+    const userId = userRecord.uid;
+    const userRef = db.ref(`users/${userId}`);
+    await userRef.set({ username: username })
+    res.status(200).json({ redirect: '/src/login.html' });
+  }
 });
 
 // Sign in route
