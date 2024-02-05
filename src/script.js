@@ -158,13 +158,12 @@ function updateRestaurantContainer() {
 
   console.log("Container Updated");
   toggleSearchDisplay(true);
-  updatePagination(currentIndex, currentResults.length, itemsPerPage);
+  updatePagination();
 }
 
-function updatePagination(currentIndex, totalResults, itemsPerPage) {
+function updatePagination() {
   const pagination = document.querySelector(".pagination");
-  const totalPages = Math.ceil(totalResults / itemsPerPage);
-  const currentPage = Math.floor(currentIndex / itemsPerPage) + 1;
+  const totalPages = Math.ceil(currentResults.length / itemsPerPage);
 
   // Clear pagination
   pagination.innerHTML = "";
@@ -172,16 +171,21 @@ function updatePagination(currentIndex, totalResults, itemsPerPage) {
   // Generate pagination
   for (let i = 1; i <= totalPages; i++) {
     const pageItem = document.createElement("li");
-    pageItem.className = "page-item ${currentIndex === i * itemsPerPage ? 'active' : ''}"; // Active if user on current page
-    pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`; // Page number
+    pageItem.className = `page-item ${i === Math.ceil(currentIndex / itemsPerPage) ? "active" : ""}`;
+
+    const pageLink = document.createElement("a");
+    pageLink.className = "page-link";
+    pageLink.href = "#";
+    pageLink.textContent = i;
 
     // Click listener
-    pageItem.querySelector("a").addEventListener("click", (e) => {
+    pageLink.addEventListener("click", (e) => {
       e.preventDefault();
       currentIndex = (i - 1) * itemsPerPage;
       console.log("Current Index: ", currentIndex);
       updateRestaurantContainer();
     });
+    pageItem.appendChild(pageLink);
     pagination.appendChild(pageItem);
   }
 }
