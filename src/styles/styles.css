@@ -10978,3 +10978,8 @@ footer.footer {
 .spacer {
   height: 200px;
 }
+
+/* Custom font-style for chinese characters */
+.chinese {
+  font-family: 'Noto Serif TC', serif;
+}

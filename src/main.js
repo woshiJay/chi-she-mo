@@ -133,6 +133,7 @@ async function searchRestaurantByUserRequest(lat, lon, userInput) {
 function updateRestaurantContainer() {
   const restaurantNameElements = document.querySelectorAll(".resName");
   const restaurantRatingElements = document.querySelectorAll(".resRating");
+  const restaurantLinks = document.querySelectorAll(".resLink");
   const backButton = document.getElementById("backButton");
   const loadMoreButton = document.getElementById("loadMoreButton");
 
@@ -141,10 +142,13 @@ function updateRestaurantContainer() {
       if (index < restaurantNameElements.length) {
           restaurantNameElements[index].textContent = restaurant.name;
           restaurantRatingElements[index].textContent = restaurant.rating;
-      } else {
+          restaurantLinks[index].href = `https://www.google.com/maps/place/?q=place_id:${restaurant.place_id}`;
+          restaurantLinks[index].target = "_blank";
+        } else {
         // clear remaining containers if there are no more results left
           restaurantNameElements[index].textContent = "";
           restaurantRatingElements[index].textContent = "";
+          restaurantLinks[index].href = "";
       }
   });
 
@@ -159,6 +163,10 @@ function updateRestaurantContainer() {
   console.log("Container Updated");
   toggleSearchDisplay(true);
   updatePagination();
+}
+
+function redirectToRestaurantPage() {
+  
 }
 
 function updatePagination() {
@@ -198,3 +206,9 @@ function toggleSearchDisplay(forceShow = true) {
       showSearch.classList.add("show");
   }
 }
+
+// TODO - Add event listeners for the following:
+// 1. Link Restaurant Names to their respective restaurant page
+// 2. Like button interactions with database
+// 3. About Page
+// 4. Trial Page

@@ -235,7 +235,8 @@ app.post("/getRestaurants", async (req, res) => {
     if (apiResponse.ok) {
       const restaurants = apiData.results.map((restaurant) => ({
         name: restaurant.name,
-        rating: restaurant.rating
+        rating: restaurant.rating,
+        place_id: restaurant.place_id
       }));
 
       console.log("Values to pass: " + restaurants);
@@ -261,14 +262,14 @@ app.post("/getSearchedRestaurants", async (req, res) => {
   try {
     const apiResponse = await fetch(url);
     const apiData = await apiResponse.json();
-    // res.send(apiData);
     console.log("Reply from Server");
     console.log(apiData);
 
     if (apiResponse.ok) {
       const restaurants = apiData.results.map((restaurant) => ({
         name: restaurant.name,
-        rating: restaurant.rating
+        rating: restaurant.rating,
+        place_id: restaurant.place_id
       }));
 
       console.log("Values to pass: " + restaurants);
@@ -283,6 +284,8 @@ app.post("/getSearchedRestaurants", async (req, res) => {
   }
 });
 
+
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
+
