@@ -108,14 +108,14 @@ app.post('/api/user_restaurants', async (req, res) => {
 // when unlike, delete from database 
 app.delete('/api/delete_user_restaurants', async (req, res) => {
   try {
-      const { userId, restaurantId } = req.query;
+      const { userEmail, restaurantId } = req.query;
       
-      if (!userId || !restaurantId) {
-          return res.status(400).send('Missing userId or restaurantId');
+      if (!userEmail || !restaurantId) { //need to change to useremail
+          return res.status(400).send('Missing userEmail or restaurantId');
       }
 
       const result = await UserRestaurant.deleteOne({ 
-          userId: mongoose.Types.ObjectId(userId), 
+          userId: mongoose.Types.ObjectId(userEmail), 
           restaurantId: mongoose.Types.ObjectId(restaurantId) 
       });
 
