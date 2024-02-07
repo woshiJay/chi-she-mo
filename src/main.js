@@ -29,9 +29,41 @@ function initializeLikeButtons() {
           const heartIcon = this.querySelector(".i-heart");
           heartIcon.classList.toggle("bi-heart");
           heartIcon.classList.toggle("bi-heart-fill");
-          alert(heartIcon.classList.contains("bi-heart-fill") ? "Added to Favourites." : "Removed from Favourites.");
+
+          const isFavorite = heartIcon.classList.contains("bi-heart-fill");
+
+          const container = button.closest('.card-body'); // Add the actual selector for your restaurant container
+          const name = container.querySelector(".resName").textContent; // Get the restaurant name text
+          const placeId = container.querySelector(".resLink").dataset.placeId; // Assuming you store place_id in data-place-id attribute of the link
+    
+          // Here need to go to backend to add to database
+          // Extract restaurant name and place_id to save to database
+          const formData = {
+            name: name,
+            place_id: placeId,
+            isFavorite: isFavorite
+          };
+          
+          // Send the form data to the server
+          fetch('/api/restaurants', {
+              method: 'POST', // Specify the method
+              headers: {
+                  'Content-Type': 'application/json', // Set the content type header for JSON
+              },
+              body: JSON.stringify(formData) // Convert the JavaScript object to a JSON string
+          })
+          .then(response => response.json()) // Parse the JSON response
+          .then(data => {
+              console.log('Success:', data);
+              alert('Restaurant added successfully!');
+              alert(heartIcon.classList.contains("bi-heart-fill") ? "Added to Favourites." : "Removed from Favourites.");
+          })
+          .catch((error) => {
+              console.error('Error:', error);
+              alert('An error occurred while adding the restaurant.');
+          });
+        });
       });
-  });
 }
 
 function initializeLoadMoreButton() {
