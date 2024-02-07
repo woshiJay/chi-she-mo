@@ -45,7 +45,7 @@
             <h3 class="fw-light mx-3">Chi She Mo</h3>
           </div>
           <h1 class="fw-semibold text-center my-4">Sign Up</h1>
-          <form class="my-5">
+          <form id="registerForm" class="my-5">
             <div class="d-flex justify-content-center my-3">
               <div class="form-group">
                 <h6 for="username" class="mx-2 fs-6 font-monospace">Username</h6>
@@ -68,7 +68,7 @@
               <h6 for="password" class="my-2 fs-6 text-center font-monospace">Or Sign Up With:</h6>
             </div>
             <div class="d-flex justify-content-center my-3">
-              <a href="#">
+              <a href="#"> 
                 <button type="button" id="googleButton" class="btn btn-outline-secondary me-2">
                   <img src="/images/google.png" class="img-fluid" alt="google" width="36px" height="36px">
                 </button>
@@ -85,7 +85,7 @@
               </a>
             </div>
             <div class="d-flex justify-content-center my-4">
-              <button type="button" id="registerButton" class="btn btn-dark rounded-pill">Register</button>
+              <button type="submit" id="registerButton" class="btn btn-dark rounded-pill">Register</button>
             </div>
             <p class="text-center">Already a member? <a href="login.html" class="text-dark">Login now</a></p>
           </form>
@@ -104,6 +104,6 @@
   </div>
 </footer>
 
-<script src="/src/auth/authentication.js"></script>
+<script src="/src/auth/register.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </html>

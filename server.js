@@ -210,9 +210,16 @@ app.get('/get-username', async (req, res) => {
   if (!userId) {
       return res.status(400).json({ alert: "User ID is required!" });
   }
-
   // get username from database here and return back to frontend
-  
+  const userRef = db.ref(`users/${userId}`);
+  userRef.once('value', (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+          res.status(200).json({ username: data.username });
+      } else {
+          res.status(404).json({ alert: "User not found!" });
+      }
+  });
 });
 
 // ----------------------------------------------------------------------
@@ -235,7 +242,7 @@ app.post("/getRestaurants", async (req, res) => {
     if (apiResponse.ok) {
       const restaurants = apiData.results.map((restaurant) => ({
         name: restaurant.name,
-        rating: restaurant.rating,
+        rating: restaurant.rating == 0 ? "No rating available" : restaurant.rating,
         place_id: restaurant.place_id
       }));
 
@@ -268,7 +275,7 @@ app.post("/getSearchedRestaurants", async (req, res) => {
     if (apiResponse.ok) {
       const restaurants = apiData.results.map((restaurant) => ({
         name: restaurant.name,
-        rating: restaurant.rating,
+        rating: restaurant.rating == 0 ? "No rating available" : restaurant.rating,
         place_id: restaurant.place_id
       }));
 

@@ -12,14 +12,14 @@ document.addEventListener("DOMContentLoaded", async function() {
   initializeLocationAndSearch();
 });
 
-function initializeThemeToggle() {
-  const lightThemeButton = document.getElementById('lightTheme');
-  const darkThemeButton = document.getElementById('darkTheme');
-  const bodyElement = document.body;
+// function initializeThemeToggle() {
+//   const lightThemeButton = document.getElementById('lightTheme');
+//   const darkThemeButton = document.getElementById('darkTheme');
+//   const bodyElement = document.body;
 
-  lightThemeButton.addEventListener('click', () => bodyElement.classList.remove('dark-theme'));
-  darkThemeButton.addEventListener('click', () => bodyElement.classList.add('dark-theme'));
-}
+//   lightThemeButton.addEventListener('click', () => bodyElement.classList.remove('dark-theme'));
+//   darkThemeButton.addEventListener('click', () => bodyElement.classList.add('dark-theme'));
+// }
 
 function initializeLikeButtons() {
   const likeButtons = document.querySelectorAll(".likeButton");
@@ -62,8 +62,9 @@ async function initializeLocationAndSearch() {
   });
 
   cravingsInput.addEventListener("keydown", async (event) => {
-      if (event.key === "Enter" || event.keyCode === 13) {
+      if (event.key === "Enter") {
           event.preventDefault();
+          console.log("Enter Pressed")
           const userInput = cravingsInput.value;
           await getLocation(event, userInput);
       }
@@ -79,20 +80,40 @@ async function initializeLocationAndSearch() {
 
 async function getLocation(event, userInput = '') {
   if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(async (position) => {
-          const { latitude, longitude } = position.coords;
-          console.log("Latitude: " + latitude + ", Longitude: " + longitude);
-          if (event.target.classList.contains("shuffleButton")) {
-              await searchRestaurantByCoordinates(latitude, longitude);
-          } else if (event.target.classList.contains("enterButton")) {
-              await searchRestaurantByUserRequest(latitude, longitude, userInput);
-          }
-      }, (error) => {
-          console.error("Geolocation error:", error);
-          alert("Error obtaining location.");
-      });
+    try {
+      const permissionStatus = await navigator.permissions.query({ name: "geolocation" });
+
+      if (permissionStatus.state === "granted") {
+          console.log("Geolocation is granted");
+      } else if (permissionStatus.state === "prompt") {
+        navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+      } else if (permissionStatus.state === "denied") {
+        alert("Geolocation is denied");
+      }
+
+      async function successCallback(position) {
+        const { latitude, longitude } = position.coords;
+        console.log("Latitude: " + latitude + ", Longitude: " + longitude);
+        
+        if (event.target.classList.contains("shuffleButton")) {
+            await searchRestaurantByCoordinates(latitude, longitude);
+        } else if (event.target.classList.contains("enterButton")) {
+            await searchRestaurantByUserRequest(latitude, longitude, userInput);
+        } else if (event.key === "Enter") {
+            await searchRestaurantByUserRequest(latitude, longitude, userInput);
+        }
+      } 
+
+      function errorCallback(error) {
+        console.error("Geolocation Error: ", error);
+        alert("Error Fetching Location. Please try again.");
+      }
+
+    } catch (error) {
+      console.error("Error during geolocation permission check", error);
+    }
   } else {
-      alert("Geolocation is not supported by this browser.");
+    alert("Geolocation is not supported by your browser");
   }
 }
 
@@ -165,10 +186,6 @@ function updateRestaurantContainer() {
   updatePagination();
 }
 
-function redirectToRestaurantPage() {
-  
-}
-
 function updatePagination() {
   const pagination = document.querySelector(".pagination");
   const totalPages = Math.ceil(currentResults.length / itemsPerPage);
@@ -208,7 +225,6 @@ function toggleSearchDisplay(forceShow = true) {
 }
 
 // TODO - Add event listeners for the following:
-// 1. Link Restaurant Names to their respective restaurant page
 // 2. Like button interactions with database
 // 3. About Page
 // 4. Trial Page
