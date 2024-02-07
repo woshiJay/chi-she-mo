@@ -25,45 +25,106 @@ function initializeLikeButtons() {
   const likeButtons = document.querySelectorAll(".likeButton");
 
   likeButtons.forEach((button) => {
-      button.addEventListener("click", function () {
-          const heartIcon = this.querySelector(".i-heart");
-          heartIcon.classList.toggle("bi-heart");
-          heartIcon.classList.toggle("bi-heart-fill");
+    button.addEventListener("click", function () {
+      const heartIcon = this.querySelector(".i-heart");
+      heartIcon.classList.toggle("bi-heart");
+      heartIcon.classList.toggle("bi-heart-fill");
 
-          const isFavorite = heartIcon.classList.contains("bi-heart-fill");
+      const isFavourite = heartIcon.classList.contains("bi-heart-fill");
 
-          const container = button.closest('.card-body'); // Add the actual selector for your restaurant container
-          const name = container.querySelector(".resName").textContent; // Get the restaurant name text
-          const placeId = container.querySelector(".resLink").dataset.placeId; // Assuming you store place_id in data-place-id attribute of the link
-    
-          // Here need to go to backend to add to database
-          // Extract restaurant name and place_id to save to database
-          const formData = {
-            name: name,
-            place_id: placeId,
-            isFavorite: isFavorite
-          };
-          
-          // Send the form data to the server
-          fetch('/api/restaurants', {
-              method: 'POST', // Specify the method
-              headers: {
-                  'Content-Type': 'application/json', // Set the content type header for JSON
-              },
-              body: JSON.stringify(formData) // Convert the JavaScript object to a JSON string
-          })
-          .then(response => response.json()) // Parse the JSON response
-          .then(data => {
-              console.log('Success:', data);
-              alert('Restaurant added successfully!');
-              alert(heartIcon.classList.contains("bi-heart-fill") ? "Added to Favourites." : "Removed from Favourites.");
-          })
-          .catch((error) => {
-              console.error('Error:', error);
-              alert('An error occurred while adding the restaurant.');
-          });
-        });
-      });
+      const container = button.closest('.card-body'); 
+      const name = container.querySelector(".resName").textContent;
+      const placeId = container.querySelector(".resLink").dataset.placeId;
+
+      const restaurantDB = {
+        name: name,
+        place_id: placeId
+      };
+
+      const userResDB = {
+        user_id: sessionStorage.getItem('userId'),
+        restaurant_id: placeId
+      };
+
+      if (isFavourite) {
+        addToFavourites(restaurantDB, userResDB);
+      } else {
+        removeFromFavourites(restaurantDB, userResDB);
+      }
+
+    });
+  });
+}
+
+function addToFavourites(restaurantDB, userResDB) {
+  // Send data to restaurant database
+  fetch('http://localhost:5501/api/restaurants', {
+    method: 'POST', // Specify the method
+    headers: {
+      'Content-Type': 'application/json', // Set the content type header for JSON
+    },
+    body: JSON.stringify(restaurantDB) // Convert the JavaScript object to a JSON string
+  })
+    .then(response => response.json()) // Parse the JSON response
+    .then(data => {
+      console.log('Sent to Res DB:', data);
+      alert(heartIcon.classList.contains("bi-heart-fill") ? "Added to Favourites." : "Removed from Favourites.");
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      alert('An error occurred while adding the restaurant.');
+    });
+
+  // Send data to user_restaurants database
+  fetch('http://localhost:5501/api/user_restaurants', {
+    method: 'POST', // Specify the method
+    headers: {
+      'Content-Type': 'application/json', // Set the content type header for JSON
+    },
+    body: JSON.stringify(userResDB) // Convert the JavaScript object to a JSON string
+  })
+    .then(response => response.json()) // Parse the JSON response
+    .then(data => {
+      console.log('Sent to userRes DB:', data);
+      alert(heartIcon.classList.contains("bi-heart-fill") ? "Added to Favourites." : "Removed from Favourites.");
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      alert('An error occurred while adding the restaurant.');
+    });
+}
+
+function removeFromFavourites(restaurantDB, userResDB) {
+  fetch(`http://localhost:5501/api/delete_user_restaurants?userId=${restaurantDB.user_id}&restaurantId=${restaurantDB.restaurant_id}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Removed from ResDB:', data);
+    alert('Removed from Favourites.');
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+    alert('An error occurred while removing from favourites.');
+  });
+  fetch(`http://localhost:5501/api/delete_user_restaurants?userId=${userResDB.user_id}&restaurantId=${userResDB.restaurant_id}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Removed from userResDB:', data);
+    alert('Removed from Favourites.');
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+    alert('An error occurred while removing from favourites.');
+  });
 }
 
 function initializeLoadMoreButton() {
@@ -257,6 +318,7 @@ function toggleSearchDisplay(forceShow = true) {
 }
 
 // TODO - Add event listeners for the following:
-// 2. Like button interactions with database
-// 3. About Page
-// 4. Trial Page
+// 1. Like button interactions with database
+// - need to check if liked restaurant is already in the database, else if matches search results, fill like button
+// 2. About Page
+// 3. Trial Page
