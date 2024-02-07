@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/images/fried-egg.png" type="image/" />
+    <link href="/src/styles/styles.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+    <title>Login</title>
+  </head>
+
+  <!-- navbar -->
+  <nav class="navbar navbar-expand-lg py-3 mb-5 bg-white">
+    <div class="container">
+      <div class="col">
+        <div class="d-flex justify-content-center fw-light">
+          <ul class="nav">
+            <li class="nav-item">
+              <a class="navbar-brand" href="#">
+                <img
+                  src="/images/fried-egg.png"
+                  alt="brand"
+                  class="img-fluid"
+                  width="48px"
+                  height="48px"
+                />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+<body class="bg-dark-subtle">
+  <div class="container">
+    <div class="container position-relative w-100 w-md-50 bg-white shadow rounded">
+      <div class="row">
+        <div class="col">
+          <div class="d-flex justify-content-start mt-3 mx-3">
+            <a href="#">
+              <img src="/images/fried-egg.png" class="img-fluid" alt="logo" width="36px" height="36px">
+            </a>
+            <h3 class="fw-light mx-3">Chi She Mo</h3>
+          </div>
+          <h1 class="fw-semibold text-center my-4">Login</h1>
+          <form id="loginForm" class="my-5">
+            <div class="d-flex justify-content-center my-3">
+              <div class="form-group">
+                <!-- <label for="email" class="form-label">Email address</label> -->
+                <h6 for="email" class="mx-2 fs-6 font-monospace">Email</h6>
+                <input type="email" class="px-5 py-2 w-100 text-justify border border-dark rounded-5" id="email" required/>
+              </div>
+            </div>
+            <div class="d-flex justify-content-center my-3">
+              <div class="form-group">
+                <!-- <label for="email" class="form-label">Email address</label> -->
+                <h6 for="password" class="mx-2 fs-6 font-monospace">Password</h6>
+                <input type="password" class="px-5 py-2 w-100 text-justify border border-dark rounded-5" id="password" required/>
+              </div>
+            </div>
+              <p class="text-center">Not a member? <a href="register.html" class="text-dark">Sign Up here</a></p>
+            <div class="d-flex justify-content-center mt-5">
+              <button type="submit" id="submitButton" class="btn btn-dark rounded-pill w-lg-50">Login</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+<footer class="p-3 mt-5 sticky">
+  <hr class="mt-5">
+  <div class="container">
+    <div class="text-lg-start">
+      <p class="text-muted small mb-4 mb-lg-0">&copy; Chi-She-Mo 2024. All Rights Reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="/src/auth/login.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</html>
