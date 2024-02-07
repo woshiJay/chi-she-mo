@@ -19,29 +19,54 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
 
 // User Schema
 const userSchema = new mongoose.Schema({
-  name: String,
-  email: String,
+  name: { 
+    type: String,
+    required: true
+  },
+  email: { 
+    type: String,
+    required: true,
+    unique: true // This enforces `email` as a unique field across the collection
+  }
   // other user fields...
 });
 
 const User = mongoose.model('User', userSchema);
 
-// Restaurant Schema
 const restaurantSchema = new mongoose.Schema({
-  name: String,
-  address: String,
-  cuisine: String,
+  name: { 
+    type: String,
+    required: true
+  },
+  placeID: { 
+    type: String,
+    required: true,
+    unique: true // This enforces `placeID` as a unique field across the collection
+  },
+  price_level: { 
+    type: String,
+    required: true
+  },
+  rating: { 
+    type: String,
+    required: true
+  }
   // other restaurant fields...
 });
 
 const Restaurant = mongoose.model('Restaurant', restaurantSchema);
 
-// UserRestaurant Schema
 const userRestaurantSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  restaurantId: { type: mongoose.Schema.Types.ObjectId, ref: 'Restaurant' },
+  userEmail: { 
+    type: String,
+    ref: 'User' // This creates a reference to the User model using the `email` field
+  },
+  restaurantPlaceID: { 
+    type: String,
+    ref: 'Restaurant' // This creates a reference to the Restaurant model using the `placeID` field
+  },
   visitedDate: Date,
-  rating: Number,
+  rating: Number
   // other fields to represent the relationship...
 });
 
