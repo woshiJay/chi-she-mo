@@ -33,64 +33,76 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-const restaurantSchema = new mongoose.Schema({
-  name: { 
+// const restaurantSchema = new mongoose.Schema({
+//   name: { 
+//     type: String,
+//     required: true
+//   },
+//   placeID: { 
+//     type: String,
+//     required: true,
+//     unique: true // This enforces `placeID` as a unique field across the collection
+//   },
+//   price_level: { 
+//     type: String,
+//     required: true
+//   },
+//   rating: { 
+//     type: String,
+//     required: true
+//   }
+//   // other restaurant fields...
+// });
+
+// const Restaurant = mongoose.model('Restaurant', restaurantSchema);
+
+const userRestaurantSchema = new mongoose.Schema({
+  userID: { 
     type: String,
-    required: true
+  },
+  resName: {
+    type: String,
   },
   placeID: { 
     type: String,
-    required: true,
-    unique: true // This enforces `placeID` as a unique field across the collection
-  },
-  price_level: { 
-    type: String,
-    required: true
-  },
-  rating: { 
-    type: String,
-    required: true
-  }
-  // other restaurant fields...
-});
-
-const Restaurant = mongoose.model('Restaurant', restaurantSchema);
-
-const userRestaurantSchema = new mongoose.Schema({
-  userEmail: { 
-    type: String,
-    ref: 'User' // This creates a reference to the User model using the `email` field
-  },
-  restaurantPlaceID: { 
-    type: String,
     ref: 'Restaurant' // This creates a reference to the Restaurant model using the `placeID` field
   },
-  visitedDate: Date,
-  rating: Number
-  // other fields to represent the relationship...
 });
 
 const UserRestaurant = mongoose.model('UserRestaurant', userRestaurantSchema);
 
 // add user to the database
-app.post('/api/users', async (req, res) => {
-  try {
-    let user = new User(req.body);
-    user = await user.save();
-    res.send(user);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+// app.post('/api/users', async (req, res) => {
+//   try {
+//     let user = new User(req.body);
+//     user = await user.save();
+//     res.send(user);
+//   } catch (error) {
+//     res.status(500).send(error);
+//   }
+// });
 
-// Create a new restaurant
-app.post('/api/restaurants', async (req, res) => {
+// // Create a new restaurant
+// app.post('/api/restaurants', async (req, res) => {
+//   try {
+//     let restaurant = new Restaurant(req.body);
+//     restaurant = await restaurant.save();
+//     res.send(restaurant);
+//   } catch (error) {
+//     res.status(500).send(error);
+//   }
+// });
+
+// Check user liked restaurants when user does a search
+app.get('/api/user_restaurants', async (req, res) => {
   try {
-    let restaurant = new Restaurant(req.body);
-    restaurant = await restaurant.save();
-    res.send(restaurant);
-  } catch (error) {
-    res.status(500).send(error);
+    const { userId } = req.query;
+
+    const userLikedRestaurants = await UserRestaurant.find({ userID: userId});
+    res.json(userLikedRestaurants);
+  } catch {
+    console.error("Error fetching liked restaurants: ", error);
+    res.status(500).json({error: "Error fetching data"});
   }
 });
 
@@ -271,7 +283,6 @@ app.post("/getRestaurants", async (req, res) => {
         place_id: restaurant.place_id
       }));
 
-      console.log("Values to pass: " + restaurants);
       res.json(restaurants);
 
     } else {
@@ -304,7 +315,6 @@ app.post("/getSearchedRestaurants", async (req, res) => {
         place_id: restaurant.place_id
       }));
 
-      console.log("Values to pass: " + restaurants);
       res.json(restaurants);
 
     } else {

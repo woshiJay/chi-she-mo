@@ -2,6 +2,7 @@
 let currentResults = [];
 let currentIndex = 0;
 const itemsPerPage = 5;
+// let userId = sessionStorage.getItem("userId");
 
 // Theme toggling and like button interactions
 document.addEventListener("DOMContentLoaded", async function() {
@@ -27,54 +28,43 @@ function initializeLikeButtons() {
   likeButtons.forEach((button) => {
     button.addEventListener("click", function () {
       const heartIcon = this.querySelector(".i-heart");
+
       heartIcon.classList.toggle("bi-heart");
       heartIcon.classList.toggle("bi-heart-fill");
 
       const isFavourite = heartIcon.classList.contains("bi-heart-fill");
-
       const container = button.closest('.card-body'); 
       const name = container.querySelector(".resName").textContent;
-      const placeId = container.querySelector(".resLink").dataset.placeId;
+      const placeID = container.querySelector(".resLink").href.split("place_id:")[1];
 
-      const restaurantDB = {
-        name: name,
-        place_id: placeId
-      };
+      // const restaurantIndex = currentResults.findIndex(restaurant => restaurant.place_id === placeId);
+
+      // if (restaurantIndex !== -1) {
+      //   currentResults[restaurantIndex].liked = !isFavourite;
+      //   heartIcon.classList.toggle("bi-heart");
+      //   heartIcon.classList.toggle("bi-heart-fill");
+      // } else {
+      //   console.error("Restaurant not found in current results");
+      // }
 
       const userResDB = {
-        user_id: sessionStorage.getItem('userId'),
-        restaurant_id: placeId
+        userID: sessionStorage.getItem("userId"),
+        resName: name,
+        placeID: placeID
       };
 
       if (isFavourite) {
-        addToFavourites(restaurantDB, userResDB);
+        addToFavourites(userResDB);
       } else {
-        removeFromFavourites(restaurantDB, userResDB);
+        console.log("Its accessing removing from fav area")
+        // removeFromFavourites(userResDB);
       }
-
     });
   });
 }
 
-function addToFavourites(restaurantDB, userResDB) {
-  // Send data to restaurant database
-  fetch('http://localhost:5501/api/restaurants', {
-    method: 'POST', // Specify the method
-    headers: {
-      'Content-Type': 'application/json', // Set the content type header for JSON
-    },
-    body: JSON.stringify(restaurantDB) // Convert the JavaScript object to a JSON string
-  })
-    .then(response => response.json()) // Parse the JSON response
-    .then(data => {
-      console.log('Sent to Res DB:', data);
-      alert(heartIcon.classList.contains("bi-heart-fill") ? "Added to Favourites." : "Removed from Favourites.");
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-      alert('An error occurred while adding the restaurant.');
-    });
-
+function addToFavourites(userResDB) {
+  console.log('Sent items: ', userResDB);
   // Send data to user_restaurants database
   fetch('http://localhost:5501/api/user_restaurants', {
     method: 'POST', // Specify the method
@@ -86,7 +76,6 @@ function addToFavourites(restaurantDB, userResDB) {
     .then(response => response.json()) // Parse the JSON response
     .then(data => {
       console.log('Sent to userRes DB:', data);
-      alert(heartIcon.classList.contains("bi-heart-fill") ? "Added to Favourites." : "Removed from Favourites.");
     })
     .catch((error) => {
       console.error('Error:', error);
@@ -94,32 +83,21 @@ function addToFavourites(restaurantDB, userResDB) {
     });
 }
 
-function removeFromFavourites(restaurantDB, userResDB) {
-  fetch(`http://localhost:5501/api/delete_user_restaurants?userId=${restaurantDB.user_id}&restaurantId=${restaurantDB.restaurant_id}`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-    }
-  })
-  .then(response => response.json())
-  .then(data => {
-    console.log('Removed from ResDB:', data);
-    alert('Removed from Favourites.');
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-    alert('An error occurred while removing from favourites.');
-  });
+function removeFromFavourites(userResDB) {
   fetch(`http://localhost:5501/api/delete_user_restaurants?userId=${userResDB.user_id}&restaurantId=${userResDB.restaurant_id}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
     }
   })
-  .then(response => response.json())
-  .then(data => {
-    console.log('Removed from userResDB:', data);
-    alert('Removed from Favourites.');
+  .then (response => {
+    if (response.ok) {
+      console.log('Removed from userRes DB:', response);
+      alert("Removed from Favourites.");
+    } else {
+      console.log("Error Removing from favourites: ", response);
+      alert("An error occurred while removing from favourites.");
+    }
   })
   .catch((error) => {
     console.error('Error:', error);
@@ -244,6 +222,20 @@ async function searchRestaurantByUserRequest(lat, lon, userInput) {
   }
 }
 
+// async function fetchUserLikedRestaurant(userID) {
+//   try {
+//     const userId = sessionStorage.getItem('userId');
+//     const response = await fetch(`http://localhost:5501/api/user_restaurants?userId=${userId}`);
+//     if (!response.ok) {
+//       throw new Error('Network response was not ok');
+//     }
+//     const userLikedRestaurants = await response.json();
+//     return userLikedRestaurants;
+//   } catch (error) {
+//     console.error("Error:", error);
+//   }
+// }
+
 function updateRestaurantContainer() {
   const restaurantNameElements = document.querySelectorAll(".resName");
   const restaurantRatingElements = document.querySelectorAll(".resRating");
@@ -253,20 +245,33 @@ function updateRestaurantContainer() {
 
   const showEachResults = currentResults.slice(currentIndex, currentIndex + itemsPerPage);
   showEachResults.forEach((restaurant, index) => {
-      if (index < restaurantNameElements.length) {
-          restaurantNameElements[index].textContent = restaurant.name;
-          restaurantRatingElements[index].textContent = restaurant.rating;
-          restaurantLinks[index].href = `https://www.google.com/maps/place/?q=place_id:${restaurant.place_id}`;
-          restaurantLinks[index].target = "_blank";
-        } else {
-        // clear remaining containers if there are no more results left
-          restaurantNameElements[index].textContent = "";
-          restaurantRatingElements[index].textContent = "";
-          restaurantLinks[index].href = "";
-      }
+    // const likeButton = document.querySelectorAll(".likeButton")[index];
+    // const heartIcon = likeButton.querySelector(".i-heart");
+
+    // if (userLikedRestaurants.includes(restaurant.place_id)) {
+    //   heartIcon.classList.add("bi-heart-fill");
+    //   heartIcon.classList.remove("bi-heart");
+    // } else {
+    //   heartIcon.classList.add("bi-heart");
+    //   heartIcon.classList.remove("bi-heart-fill");
+    // }
+
+    if (index < restaurantNameElements.length) {
+        restaurantNameElements[index].textContent = restaurant.name;
+        restaurantRatingElements[index].textContent = restaurant.rating;
+        restaurantLinks[index].href = `https://www.google.com/maps/place/?q=place_id:${restaurant.place_id}`;
+        console.log(restaurantLinks[index].href);
+        restaurantLinks[index].target = "_blank";
+      } else {
+      // clear remaining containers if there are no more results left
+        restaurantNameElements[index].textContent = "";
+        restaurantRatingElements[index].textContent = "";
+        restaurantLinks[index].href = "";
+    }
   });
 
   currentIndex += itemsPerPage;
+  console.log("CurrentIndex: ", currentIndex);
 
   // Hide/Show backButton based on current index
   backButton.style.display = currentIndex > itemsPerPage ? "block" : "none";
