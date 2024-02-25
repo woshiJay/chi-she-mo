@@ -97,7 +97,6 @@ const UserRestaurant = mongoose.model('UserRestaurant', userRestaurantSchema);
 app.get('/api/user_restaurants', async (req, res) => {
   try {
     const { userId } = req.query;
-
     const userLikedRestaurants = await UserRestaurant.find({ userID: userId});
     res.json(userLikedRestaurants);
   } catch {
@@ -127,7 +126,8 @@ app.delete('/api/delete_user_restaurants', async (req, res) => {
       }
 
       const result = await UserRestaurant.deleteOne({ 
-          userId: mongoose.Types.ObjectId(userEmail), 
+          userId: mongoose.Types.ObjectId(userEmail),
+
           restaurantId: mongoose.Types.ObjectId(restaurantId) 
       });
 

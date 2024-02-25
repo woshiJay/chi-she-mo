@@ -57,7 +57,7 @@ function initializeLikeButtons() {
         addToFavourites(userResDB);
       } else {
         console.log("Its accessing removing from fav area")
-        // removeFromFavourites(userResDB);
+        removeFromFavourites(userResDB);
       }
     });
   });
