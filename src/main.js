@@ -84,7 +84,7 @@ function addToFavourites(userResDB) {
 }
 
 function removeFromFavourites(userResDB) {
-  fetch(`http://localhost:5501/api/delete_user_restaurants?userId=${userResDB.user_id}&restaurantId=${userResDB.restaurant_id}`, {
+  fetch(`http://localhost:5501/api/delete_user_restaurants?userID=${userResDB.userID}&resName=${userResDB.resName}&placeID=${userResDB.placeID}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
