@@ -1,17 +1,10 @@
+// import { } from '/src/api/geolocation.js'; // import getLocation
+// import { initializeLikeButtons } from '/src/favourite.js';
+
 // Page Indexing
 let currentResults = [];
 let currentIndex = 0;
 const itemsPerPage = 5;
-
-// Theme toggling and like button interactions
-// function initializeThemeToggle() {
-//   const lightThemeButton = document.getElementById('lightTheme');
-//   const darkThemeButton = document.getElementById('darkTheme');
-//   const bodyElement = document.body;
-
-//   lightThemeButton.addEventListener('click', () => bodyElement.classList.remove('dark-theme'));
-//   darkThemeButton.addEventListener('click', () => bodyElement.classList.add('dark-theme'));
-// }
 
 function initializeLikeButtons() {
   const likeButtons = document.querySelectorAll(".likeButton");
@@ -335,15 +328,10 @@ function toggleSearchDisplay(forceShow = true) {
 }
 
 document.addEventListener("DOMContentLoaded", async function() {
-  // initializeThemeToggle();
   initializeLikeButtons();
   initializeLoadMoreButton();
   initializeBackButton();
   initializeLocationAndSearch();
 });
 
-// TODO - Add event listeners for the following:
-// 1. Like button interactions with database
-// - need to check if liked restaurant is already in the database, else if matches search results, fill like button
-// 2. About Page
-// 3. Trial Page
+
