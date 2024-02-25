@@ -119,7 +119,7 @@ app.post('/api/user_restaurants', async (req, res) => {
 // when unlike, delete from database 
 app.delete('/api/delete_user_restaurants', async (req, res) => {
   try {
-      const { userID, resName, placeID } = req.query;
+      const { userID, placeID } = req.query;
       
       if (!userID || !placeID) { //need to change to useremail
           return res.status(400).send('Missing userId or placeId');
@@ -127,7 +127,6 @@ app.delete('/api/delete_user_restaurants', async (req, res) => {
 
       const result = await UserRestaurant.deleteOne({ 
           userID: userID,
-          resName: resName,
           placeID: placeID
       });
 

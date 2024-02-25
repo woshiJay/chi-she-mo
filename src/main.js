@@ -84,26 +84,28 @@ function addToFavourites(userResDB) {
 }
 
 function removeFromFavourites(userResDB) {
-  fetch(`http://localhost:5501/api/delete_user_restaurants?userID=${userResDB.userID}&resName=${userResDB.resName}&placeID=${userResDB.placeID}`, {
+  console.log(userResDB);
+  fetch(`http://localhost:5501/api/delete_user_restaurants?userID=${userResDB.userID}&placeID=${userResDB.placeID}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
     }
   })
   .then (response => {
-    if (response.ok) {
-      console.log('Removed from userRes DB:', response);
-      alert("Removed from Favourites.");
-    } else {
-      console.log("Error Removing from favourites: ", response);
-      alert("An error occurred while removing from favourites.");
-    }
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    } 
+    return response.json();
+  })
+  .then(data => {
+    console.log('Deleted from userRes DB:', data);
+    alert('Restaurant removed from favourites');
   })
   .catch((error) => {
     console.error('Error:', error);
-    alert('An error occurred while removing from favourites.');
-  });
-}
+    alert('An error occurred while removing the restaurant.');
+  }
+)};
 
 function initializeLoadMoreButton() {
   const loadMoreButton = document.getElementById("loadMoreButton");
