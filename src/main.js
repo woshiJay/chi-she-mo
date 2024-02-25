@@ -2,17 +2,8 @@
 let currentResults = [];
 let currentIndex = 0;
 const itemsPerPage = 5;
-// let userId = sessionStorage.getItem("userId");
 
 // Theme toggling and like button interactions
-document.addEventListener("DOMContentLoaded", async function() {
-  // initializeThemeToggle();
-  initializeLikeButtons();
-  initializeLoadMoreButton();
-  initializeBackButton();
-  initializeLocationAndSearch();
-});
-
 // function initializeThemeToggle() {
 //   const lightThemeButton = document.getElementById('lightTheme');
 //   const darkThemeButton = document.getElementById('darkTheme');
@@ -54,37 +45,41 @@ function initializeLikeButtons() {
       };
 
       if (isFavourite) {
-        addToFavourites(userResDB);
+        addToFavourites(userResDB, heartIcon);
       } else {
-        console.log("Its accessing removing from fav area")
-        removeFromFavourites(userResDB);
+        removeFromFavourites(userResDB, heartIcon);
       }
     });
   });
 }
 
-function addToFavourites(userResDB) {
-  console.log('Sent items: ', userResDB);
+function addToFavourites(userResDB, heartIcon) {
+  // console.log('Sent items: ', userResDB);
   // Send data to user_restaurants database
   fetch('http://localhost:5501/api/user_restaurants', {
     method: 'POST', // Specify the method
     headers: {
       'Content-Type': 'application/json', // Set the content type header for JSON
     },
-    body: JSON.stringify(userResDB) // Convert the JavaScript object to a JSON string
+    body: JSON.stringify(userResDB)
   })
-    .then(response => response.json()) // Parse the JSON response
+    .then(response => response.json())
     .then(data => {
       console.log('Sent to userRes DB:', data);
+      heartIcon.classList.add("bi-heart-fill");
+      heartIcon.classList.remove("bi-heart");
+      alert('Restaurant added to favourites');
     })
     .catch((error) => {
       console.error('Error:', error);
+      heartIcon.classList.remove("bi-heart-fill");
+      heartIcon.classList.add("bi-heart");
       alert('An error occurred while adding the restaurant.');
     });
 }
 
-function removeFromFavourites(userResDB) {
-  console.log(userResDB);
+function removeFromFavourites(userResDB, heartIcon) {
+  // console.log(userResDB);
   fetch(`http://localhost:5501/api/delete_user_restaurants?userID=${userResDB.userID}&placeID=${userResDB.placeID}`, {
     method: 'DELETE',
     headers: {
@@ -99,10 +94,14 @@ function removeFromFavourites(userResDB) {
   })
   .then(data => {
     console.log('Deleted from userRes DB:', data);
+    heartIcon.classList.remove("bi-heart-fill");
+    heartIcon.classList.add("bi-heart");
     alert('Restaurant removed from favourites');
   })
   .catch((error) => {
     console.error('Error:', error);
+    heartIcon.classList.add("bi-heart-fill");
+    heartIcon.classList.remove("bi-heart");
     alert('An error occurred while removing the restaurant.');
   }
 )};
@@ -137,7 +136,6 @@ async function initializeLocationAndSearch() {
   cravingsInput.addEventListener("keydown", async (event) => {
       if (event.key === "Enter") {
           event.preventDefault();
-          console.log("Enter Pressed")
           const userInput = cravingsInput.value;
           await getLocation(event, userInput);
       }
@@ -275,7 +273,6 @@ async function updateRestaurantContainer() {
         restaurantNameElements[index].textContent = restaurant.name;
         restaurantRatingElements[index].textContent = restaurant.rating;
         restaurantLinks[index].href = `https://www.google.com/maps/place/?q=place_id:${restaurant.place_id}`;
-        console.log(restaurantLinks[index].href);
         restaurantLinks[index].target = "_blank";
       } else {
       // clear remaining containers if there are no more results left
@@ -320,7 +317,7 @@ function updatePagination() {
     pageLink.addEventListener("click", (e) => {
       e.preventDefault();
       currentIndex = (i - 1) * itemsPerPage;
-      console.log("Current Index: ", currentIndex);
+      // console.log("Current Index: ", currentIndex);
       updateRestaurantContainer();
     });
     pageItem.appendChild(pageLink);
@@ -336,6 +333,14 @@ function toggleSearchDisplay(forceShow = true) {
       showSearch.classList.add("show");
   }
 }
+
+document.addEventListener("DOMContentLoaded", async function() {
+  // initializeThemeToggle();
+  initializeLikeButtons();
+  initializeLoadMoreButton();
+  initializeBackButton();
+  initializeLocationAndSearch();
+});
 
 // TODO - Add event listeners for the following:
 // 1. Like button interactions with database
