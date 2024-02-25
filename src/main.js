@@ -37,15 +37,15 @@ function initializeLikeButtons() {
       const name = container.querySelector(".resName").textContent;
       const placeID = container.querySelector(".resLink").href.split("place_id:")[1];
 
-      // const restaurantIndex = currentResults.findIndex(restaurant => restaurant.place_id === placeId);
+      const restaurantIndex = currentResults.findIndex(restaurant => restaurant.place_id === placeID);
 
-      // if (restaurantIndex !== -1) {
-      //   currentResults[restaurantIndex].liked = !isFavourite;
-      //   heartIcon.classList.toggle("bi-heart");
-      //   heartIcon.classList.toggle("bi-heart-fill");
-      // } else {
-      //   console.error("Restaurant not found in current results");
-      // }
+      if (restaurantIndex !== -1) {
+        currentResults[restaurantIndex].isLiked = !currentResults[restaurantIndex].isLiked;
+        heartIcon.classList.toggle("bi-heart");
+        heartIcon.classList.toggle("bi-heart-fill");
+      } else {
+        console.error("Restaurant not found in current results");
+      }
 
       const userResDB = {
         userID: sessionStorage.getItem("userId"),
@@ -198,6 +198,7 @@ async function searchRestaurantByCoordinates(lat, lon) {
           body: JSON.stringify({ lat, lon }),
       });
       currentResults = await response.json();
+      await checkLikedRestaurants(currentResults); // check in DB whether user has liked any of the restaurants
       currentIndex = 0;
       console.log("Successful Request:", currentResults);
       updatePagination(currentIndex, currentResults.length, itemsPerPage); // Update pagination
@@ -215,6 +216,7 @@ async function searchRestaurantByUserRequest(lat, lon, userInput) {
           body: JSON.stringify({ lat, lon, userInput }),
       });
       currentResults = await response.json();
+      await checkLikedRestaurants(currentResults); // check in DB whether user has liked any of the restaurants
       currentIndex = 0;
       console.log("Successful Request:", currentResults);
       updatePagination(currentIndex, currentResults.length, itemsPerPage);
@@ -224,21 +226,32 @@ async function searchRestaurantByUserRequest(lat, lon, userInput) {
   }
 }
 
-// async function fetchUserLikedRestaurant(userID) {
-//   try {
-//     const userId = sessionStorage.getItem('userId');
-//     const response = await fetch(`http://localhost:5501/api/user_restaurants?userId=${userId}`);
-//     if (!response.ok) {
-//       throw new Error('Network response was not ok');
-//     }
-//     const userLikedRestaurants = await response.json();
-//     return userLikedRestaurants;
-//   } catch (error) {
-//     console.error("Error:", error);
-//   }
-// }
+async function checkLikedRestaurants(restaurants) {
+  const userId = sessionStorage.getItem('userId');
+  const userLikedRestaurants = await fetchUserLikedRestaurant(userId); // pass to fetching
+  restaurants.forEach(restaurant => {
+    restaurant.isLiked = userLikedRestaurants.some(likedRestaurant => likedRestaurant.place_id === restaurant.place_id);
+  });
+}
 
-function updateRestaurantContainer() {
+async function fetchUserLikedRestaurant(userId) {
+  try {
+    const response = await fetch(`http://localhost:5501/api/user_restaurants?userID=${userId}`);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const userLikedRestaurants = await response.json();
+    return userLikedRestaurants.map(restaurant=> restaurant.placeID); // return array of placeIDs
+  } catch (error) {
+    console.error("Error:", error);
+    return []; // return empty array if error
+  }
+}
+
+async function updateRestaurantContainer() {
+  const userId = sessionStorage.getItem('userId');
+  const userLikedRestaurants = await fetchUserLikedRestaurant(userId);
+
   const restaurantNameElements = document.querySelectorAll(".resName");
   const restaurantRatingElements = document.querySelectorAll(".resRating");
   const restaurantLinks = document.querySelectorAll(".resLink");
@@ -247,16 +260,16 @@ function updateRestaurantContainer() {
 
   const showEachResults = currentResults.slice(currentIndex, currentIndex + itemsPerPage);
   showEachResults.forEach((restaurant, index) => {
-    // const likeButton = document.querySelectorAll(".likeButton")[index];
-    // const heartIcon = likeButton.querySelector(".i-heart");
+    const likeButton = document.querySelectorAll(".likeButton")[index];
+    const heartIcon = likeButton.querySelector(".i-heart");
 
-    // if (userLikedRestaurants.includes(restaurant.place_id)) {
-    //   heartIcon.classList.add("bi-heart-fill");
-    //   heartIcon.classList.remove("bi-heart");
-    // } else {
-    //   heartIcon.classList.add("bi-heart");
-    //   heartIcon.classList.remove("bi-heart-fill");
-    // }
+    if (userLikedRestaurants.includes(restaurant.place_id)) {
+      heartIcon.classList.add("bi-heart-fill");
+      heartIcon.classList.remove("bi-heart");
+    } else {
+      heartIcon.classList.add("bi-heart");
+      heartIcon.classList.remove("bi-heart-fill");
+    }
 
     if (index < restaurantNameElements.length) {
         restaurantNameElements[index].textContent = restaurant.name;

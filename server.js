@@ -96,8 +96,8 @@ const UserRestaurant = mongoose.model('UserRestaurant', userRestaurantSchema);
 // Check user liked restaurants when user does a search
 app.get('/api/user_restaurants', async (req, res) => {
   try {
-    const { userId } = req.query;
-    const userLikedRestaurants = await UserRestaurant.find({ userID: userId});
+    const { userID } = req.query;
+    const userLikedRestaurants = await UserRestaurant.find({ userID: userID});
     res.json(userLikedRestaurants);
   } catch {
     console.error("Error fetching liked restaurants: ", error);
