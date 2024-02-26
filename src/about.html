@@ -13,22 +13,36 @@
 
 <!-- navbar -->
 <nav class="navbar navbar-expand-lg py-3 mb-5">
-  <div class="container">
-    <div class="col fw-bold">
-      <div class="d-flex justify-content-between align-items-center fw-light">
-        <ul class="nav">
-          <li class="nav-item">
-            <a class="navbar-brand" href="#">
-              <img src="/images/fried-egg.png" alt="brand" class="img-fluid" width="35px" height="35px">
-            </a>
-          </li>
-        </ul>
-        <div class="d-flex justify-content-end">
+    <div class="container">
+      <div class="col fw-bold">
+        <div class="d-flex justify-content-between align-items-center fw-light">
           <ul class="nav">
-            <li class="nav-item text-decoration-underline">
-              <a href="#" id="about" class="nav-link link-body-emphasis">About</a>
+            <li class="nav-item">
+              <a class="navbar-brand" href="./index.html">
+                <img src="/images/fried-egg.png" alt="brand" class="img-fluid" width="35px" height="35px">
+              </a>
             </li>
-            <!-- TODO Changing theme -->
+            <li class="nav-item mx-1 d-none d-sm-block">
+              <h3 class="font-monospace">Chi_She_Mo</h3>
+            </li>
+          </ul>
+          <div class="d-flex justify-content-end">
+            <ul class="nav">
+              <li class="nav-item text-decoration-underline">
+                <a href="./index.html" id="about" class="nav-link link-body-emphasis">Home</a>
+              </li>
+              <li class="nav-item text-decoration-underline">
+                <a href="#" id="favourites" class="nav-link link-body-emphasis">Favourites</a>
+              </li>
+              <li class="nav-item text-decoration-underline">
+                <a href="./landing.html" id="logout" class="nav-link link-body-emphasis">Logout</a>
+              </li>
+            </div>
+          </ul>
+        </div>
+      </div>
+    </div>
+                <!-- TODO Changing theme -->
             <!-- <div class="btn-group">
                 <button class="btn dropdown-toggle" href="#" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Theme
@@ -38,12 +52,7 @@
                   <a class="dropdown-item" id="darkTheme" href="#">d</a>
                 </div>
             </div> -->
-          </div>
-        </ul>
-      </div>
-    </div>
-  </div>
-</nav>   
+  </nav>
 <body>
     <div class="container">
         <h1 class="font-monospace text-center text-decoration-underline"><i>About Us</i></h1>
@@ -61,95 +70,80 @@
         </div>
     </div>
     <div class="container mt-5">
-            <div class="row align-items-center p-3">
-                <div class="carousel">
+            <!-- <div class="row align-items-center p-3"> -->
+                <div class="carousel p-5">
                 <!-- <div class="col col-lg-8 mx-auto"> -->
                     <div class="item text-center border rounded-3 shadow shadow-md">
-                        <div class="p-3">
-                            <img src="/images/github.png" alt="brand" class="img-fluid mt-2 mb-3 rounded-5" width="120px" height="120px">
+                        <div class="p-5">
+                            <img src="/images/jay.jpg" alt="brand" class="img-fluid mt-2 mb-3 rounded-circle" width="180px" height="135px">
                             <h4 class="mt-3">Jay</h4>
                             <h5 class="font-monospace">Full Stack Dev</h5>
                             <p>Keen Coder.</p>
                             <!-- Profiles -->
                             <div class="d-flex justify-content-center">
                                 <a href="#"> 
-                                <button type="button" id="googleButton" class="btn shadow shadow-sm me-3">
-                                    <img src="/images/google.png" class="" alt="google" width="36px" height="36px">
-                                </button>
-                                </a>
-                                <a href="#">
-                                <button type="button" id="microsoftButton" class="btn shadow shadow-sm me-3">
-                                    <img src="/images/microsoft.png" class="" alt="google" width="36px" height="36px">
+                                <button type="button" id="linkedInButton" class="btn shadow shadow-sm me-3">
+                                    <img src="/images/linkedIn.png" class="" alt="linkedIn" width="36px" height="36px">
                                 </button>
                                 </a>
                                 <a href="#">
                                 <button type="button" id="githubButton" class="btn shadow shadow-sm me-3">
-                                    <img src="/images/github.png" class="" alt="google" width="36px" height="36px">
+                                    <img src="/images/github.png" class="" alt="linkedIn" width="36px" height="36px">
                                 </button>
                                 </a>
                             </div>
                         </div>
                     </div>
                     <div class="item text-center border rounded-3 shadow shadow-md">
-                        <div class="p-3">
-                            <img src="/images/github.png" alt="brand" class="img-fluid mt-2 mb-3 rounded-5" width="120px" height="120px">
-                            <h4 class="mt-3">Sattish Pratap Shewkani</h4>
-                            <h5 class="font-monospace">Backend Developer</h5>
+                        <div class="p-5">
+                            <img src="/images/sps.jpg" alt="brand" class="img-fluid mt-2 mb-3 rounded-circle" width="180px" height="135px">
+                            <h4 class="mt-3">Sattish</h4>
+                            <h5 class="font-monospace">Backend Dev</h5>
                             <p>Keen Coder.</p>
                             <!-- Profiles -->
                             <div class="d-flex justify-content-center">
                                 <a href="#"> 
-                                <button type="button" id="googleButton" class="btn shadow shadow-sm me-3">
-                                    <img src="/images/google.png" class="" alt="google" width="36px" height="36px">
-                                </button>
-                                </a>
-                                <a href="#">
-                                <button type="button" id="microsoftButton" class="btn shadow shadow-sm me-3">
-                                    <img src="/images/microsoft.png" class="" alt="google" width="36px" height="36px">
+                                <button type="button" id="linkedInButton" class="btn shadow shadow-sm me-3">
+                                    <img src="/images/linkedIn.png" class="" alt="linkedIn" width="36px" height="36px">
                                 </button>
                                 </a>
                                 <a href="#">
                                 <button type="button" id="githubButton" class="btn shadow shadow-sm me-3">
-                                    <img src="/images/github.png" class="" alt="google" width="36px" height="36px">
+                                    <img src="/images/github.png" class="" alt="linkedIn" width="36px" height="36px">
                                 </button>
                                 </a>
                             </div>
                         </div>
                     </div>
                     <div class="item text-center border rounded-3 shadow shadow-md">
-                        <div class="p-3">
-                            <img src="/images/github.png" alt="brand" class="img-fluid mt-2 mb-3 rounded-5" width="120px" height="120px">
-                            <h4 class="mt-3">Yeo Yee Tao</h4>
-                            <h5 class="font-monospace">Database Manager</h5>
+                        <div class="p-5">
+                            <img src="/images/yyt.jpg" alt="brand" class="img-fluid mt-2 mb-3 rounded-circle" width="180px" height="135px">
+                            <h4 class="mt-3">Yee Tao</h4>
+                            <h5 class="font-monospace">Database & A.I.</h5>
                             <p>Keen Coder.</p>
                             <!-- Profiles -->
                             <div class="d-flex justify-content-center">
                                 <a href="#"> 
-                                <button type="button" id="googleButton" class="btn shadow shadow-sm me-3">
-                                    <img src="/images/google.png" class="" alt="google" width="36px" height="36px">
-                                </button>
-                                </a>
-                                <a href="#">
-                                <button type="button" id="microsoftButton" class="btn shadow shadow-sm me-3">
-                                    <img src="/images/microsoft.png" class="" alt="google" width="36px" height="36px">
+                                <button type="button" id="linkedInButton" class="btn shadow shadow-sm me-3">
+                                    <img src="/images/linkedIn.png" class="" alt="linkedIn" width="36px" height="36px">
                                 </button>
                                 </a>
                                 <a href="#">
                                 <button type="button" id="githubButton" class="btn shadow shadow-sm me-3">
-                                    <img src="/images/github.png" class="" alt="google" width="36px" height="36px">
+                                    <img src="/images/github.png" class="" alt="linkedIn" width="36px" height="36px">
                                 </button>
                                 </a>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="dots">
+                    <button class="dot"></button>
+                    <button class="dot"></button>
+                    <button class="dot"></button>
+                </div>
                 <!-- </div> -->
-        </div>
-      </div>
-      <div class="carousel">
-        <div class="item"></div>
-        <div class="item"></div>
-        <div class="item"></div>
+        <!-- </div> -->
       </div>
   <footer class="p-3">
       <div class="container">
@@ -161,6 +155,7 @@
     </footer>
 </body>
 
-<script src="/src/main.js"></script>
+<script src="/src/main.js" type="module"></script>
+<script src="/src/animation/animation.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </html>

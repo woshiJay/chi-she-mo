@@ -10982,8 +10982,10 @@ footer.footer {
 /* Styles for About */
 .carousel {  
   display: flex;
+  width: 100%;
   flex-wrap: nowrap;
-  justify-content: center;
+  overflow-x: auto;
+  overflow-y: hidden;
   scroll-snap-type: x mandatory; /* <- the important piece */
 }  
 .item {
@@ -10993,10 +10995,30 @@ footer.footer {
 }
 
 .carousel::-webkit-scrollbar {
-  height: 10px;
+  display: none;
 }
 
-.carousel::-webkit-scrollbar-thumb {
-  background-color: #888;
-  border-radius: 5px;
+.dots {
+  display: flex;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .carousel {
+    justify-content: center;
+  }
+
+  .dots {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .dot {
+    height: 15px;
+    width: 15px;
+    margin-right: 10px;
+    border-radius: 50%;
+    background-color: var(--bs-light);
+  }
 }
