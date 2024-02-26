@@ -10979,7 +10979,24 @@ footer.footer {
   height: 200px;
 }
 
-/* Custom font-style for chinese characters */
-.chinese {
-  font-family: 'Noto Serif TC', serif;
+/* Styles for About */
+.carousel {  
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  scroll-snap-type: x mandatory; /* <- the important piece */
+}  
+.item {
+  flex: 0 0 auto;
+  margin-right: 20px;
+  scroll-snap-align: start; /* <- the other important piece */
+}
+
+.carousel::-webkit-scrollbar {
+  height: 10px;
+}
+
+.carousel::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 5px;
 }
