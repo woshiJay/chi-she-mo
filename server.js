@@ -152,6 +152,55 @@ app.delete('/api/delete_user_restaurants', async (req, res) => {
 //   .catch(err => console.error('Error adding user:', err));
 
 // ----------------------------------------------------------------------
+// Implement Gemini AI
+// ----------------------------------------------------------------------
+
+// const express = require('express');
+// const multer = require('multer');
+// const { GoogleGenerativeAI } = require("@google/generative-ai");
+
+// const app = express();
+// const upload = multer({ storage: multer.memoryStorage() }); // Using memory storage for simplicity
+
+// // Assume that you have set the API_KEY in your environment variables
+// const genAI = new GoogleGenerativeAI(process.env.API_KEY);
+
+// app.post('/ask-gemini-pro', upload.single('image'), async (req, res) => {
+//   try {
+//     // Check for the image and question in the request
+//     if (!req.file) {
+//       return res.status(400).send('No image file provided.');
+//     }
+//     if (!req.body.question) {
+//       return res.status(400).send('No question provided.');
+//     }
+
+//     const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
+//     const imagePart = {
+//       inlineData: {
+//         data: req.file.buffer.toString("base64"),
+//         mimeType: req.file.mimetype,
+//       },
+//     };
+
+//     // The question should be in the request body
+//     const prompt = req.body.question;
+
+//     const result = await model.generateContent([prompt, imagePart]);
+//     const response = await result.response;
+//     const text = response.text();
+//     res.send(text);
+//   } catch (error) {
+//     res.status(500).send(error.message);
+//   }
+// });
+
+// const PORT = process.env.PORT || 3000;
+// app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+
+
+// ----------------------------------------------------------------------
 // Initializing of Firebase Admin SDK
 // ----------------------------------------------------------------------
 const admin = require('firebase-admin')
