@@ -11022,3 +11022,8 @@ footer.footer {
     background-color: var(--bs-light);
   }
 }
+/* Custom rows */
+.custom.row.justify-content-center {
+  max-height: 500px;
+  overflow-y: auto;
+}
