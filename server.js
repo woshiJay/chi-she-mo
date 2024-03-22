@@ -1,11 +1,20 @@
 const express = require("express");
+const path = require("path");
 const fetch = require("node-fetch");
 const cors = require("cors");
 const app = express();
-const port = 5501;
+const port = process.env.PORT || 5501;
 
 app.use(express.json());
 app.use(cors());
+
+// Serve static files from the src directory
+app.use(express.static(path.join(__dirname, 'src')));
+
+// Catch-all handler for any request that doesn't match one above
+app.get('*', (req, res) =>{
+  res.sendFile(path.join(__dirname, 'src', 'index.html'));
+});
 
 // ----------------------------------------------------------------------
 // Database Routes
@@ -33,64 +42,75 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-const restaurantSchema = new mongoose.Schema({
-  name: { 
+// const restaurantSchema = new mongoose.Schema({
+//   name: { 
+//     type: String,
+//     required: true
+//   },
+//   placeID: { 
+//     type: String,
+//     required: true,
+//     unique: true // This enforces `placeID` as a unique field across the collection
+//   },
+//   price_level: { 
+//     type: String,
+//     required: true
+//   },
+//   rating: { 
+//     type: String,
+//     required: true
+//   }
+//   // other restaurant fields...
+// });
+
+// const Restaurant = mongoose.model('Restaurant', restaurantSchema);
+
+const userRestaurantSchema = new mongoose.Schema({
+  userID: { 
     type: String,
-    required: true
+  },
+  resName: {
+    type: String,
   },
   placeID: { 
     type: String,
-    required: true,
-    unique: true // This enforces `placeID` as a unique field across the collection
-  },
-  price_level: { 
-    type: String,
-    required: true
-  },
-  rating: { 
-    type: String,
-    required: true
-  }
-  // other restaurant fields...
-});
-
-const Restaurant = mongoose.model('Restaurant', restaurantSchema);
-
-const userRestaurantSchema = new mongoose.Schema({
-  userEmail: { 
-    type: String,
-    ref: 'User' // This creates a reference to the User model using the `email` field
-  },
-  restaurantPlaceID: { 
-    type: String,
     ref: 'Restaurant' // This creates a reference to the Restaurant model using the `placeID` field
   },
-  visitedDate: Date,
-  rating: Number
-  // other fields to represent the relationship...
 });
 
 const UserRestaurant = mongoose.model('UserRestaurant', userRestaurantSchema);
 
 // add user to the database
-app.post('/api/users', async (req, res) => {
-  try {
-    let user = new User(req.body);
-    user = await user.save();
-    res.send(user);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+// app.post('/api/users', async (req, res) => {
+//   try {
+//     let user = new User(req.body);
+//     user = await user.save();
+//     res.send(user);
+//   } catch (error) {
+//     res.status(500).send(error);
+//   }
+// });
 
-// Create a new restaurant
-app.post('/api/restaurants', async (req, res) => {
+// // Create a new restaurant
+// app.post('/api/restaurants', async (req, res) => {
+//   try {
+//     let restaurant = new Restaurant(req.body);
+//     restaurant = await restaurant.save();
+//     res.send(restaurant);
+//   } catch (error) {
+//     res.status(500).send(error);
+//   }
+// });
+
+// Check user liked restaurants when user does a search
+app.get('/api/user_restaurants', async (req, res) => {
   try {
-    let restaurant = new Restaurant(req.body);
-    restaurant = await restaurant.save();
-    res.send(restaurant);
-  } catch (error) {
-    res.status(500).send(error);
+    const { userID } = req.query;
+    const userLikedRestaurants = await UserRestaurant.find({ userID: userID});
+    res.json(userLikedRestaurants);
+  } catch {
+    console.error("Error fetching liked restaurants: ", error);
+    res.status(500).json({error: "Error fetching data"});
   }
 });
 
@@ -108,15 +128,15 @@ app.post('/api/user_restaurants', async (req, res) => {
 // when unlike, delete from database 
 app.delete('/api/delete_user_restaurants', async (req, res) => {
   try {
-      const { userEmail, restaurantId } = req.query;
+      const { userID, placeID } = req.query;
       
-      if (!userEmail || !restaurantId) { //need to change to useremail
-          return res.status(400).send('Missing userEmail or restaurantId');
+      if (!userID || !placeID) { //need to change to useremail
+          return res.status(400).send('Missing userId or placeId');
       }
 
       const result = await UserRestaurant.deleteOne({ 
-          userId: mongoose.Types.ObjectId(userEmail), 
-          restaurantId: mongoose.Types.ObjectId(restaurantId) 
+          userID: userID,
+          placeID: placeID
       });
 
       if (result.deletedCount === 0) {
@@ -139,6 +159,55 @@ app.delete('/api/delete_user_restaurants', async (req, res) => {
 // newUser.save()
 //   .then(doc => console.log('User added:', doc))
 //   .catch(err => console.error('Error adding user:', err));
+
+// ----------------------------------------------------------------------
+// Implement Gemini AI
+// ----------------------------------------------------------------------
+
+// const express = require('express');
+// const multer = require('multer');
+// const { GoogleGenerativeAI } = require("@google/generative-ai");
+
+// const app = express();
+// const upload = multer({ storage: multer.memoryStorage() }); // Using memory storage for simplicity
+
+// // Assume that you have set the API_KEY in your environment variables
+// const genAI = new GoogleGenerativeAI(process.env.API_KEY);
+
+// app.post('/ask-gemini-pro', upload.single('image'), async (req, res) => {
+//   try {
+//     // Check for the image and question in the request
+//     if (!req.file) {
+//       return res.status(400).send('No image file provided.');
+//     }
+//     if (!req.body.question) {
+//       return res.status(400).send('No question provided.');
+//     }
+
+//     const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
+//     const imagePart = {
+//       inlineData: {
+//         data: req.file.buffer.toString("base64"),
+//         mimeType: req.file.mimetype,
+//       },
+//     };
+
+//     // The question should be in the request body
+//     const prompt = req.body.question;
+
+//     const result = await model.generateContent([prompt, imagePart]);
+//     const response = await result.response;
+//     const text = response.text();
+//     res.send(text);
+//   } catch (error) {
+//     res.status(500).send(error.message);
+//   }
+// });
+
+// const PORT = process.env.PORT || 3000;
+// app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+
 
 // ----------------------------------------------------------------------
 // Initializing of Firebase Admin SDK
@@ -271,7 +340,6 @@ app.post("/getRestaurants", async (req, res) => {
         place_id: restaurant.place_id
       }));
 
-      console.log("Values to pass: " + restaurants);
       res.json(restaurants);
 
     } else {
@@ -304,7 +372,6 @@ app.post("/getSearchedRestaurants", async (req, res) => {
         place_id: restaurant.place_id
       }));
 
-      console.log("Values to pass: " + restaurants);
       res.json(restaurants);
 
     } else {

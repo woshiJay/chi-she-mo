@@ -11,212 +11,57 @@
   <title>What to Eat</title>
 </head>
 
-<!-- navbar -->
-<nav class="navbar navbar-expand-lg py-3 mb-5">
-  <div class="container">
-    <div class="col fw-bold">
-      <div class="d-flex justify-content-between align-items-center fw-light">
-        <ul class="nav">
-          <li class="nav-item">
-            <a class="navbar-brand" href="#">
-              <img src="/images/fried-egg.png" alt="brand" class="img-fluid" width="35px" height="35px">
-            </a>
-          </li>
-          <li class="nav-item mx-1 d-none d-sm-block">
-            <h3 class="font-monospace">Chi_She_Mo</h3>
-          </li>
-        </ul>
-        <div class="d-flex justify-content-end">
-          <ul class="nav">
-            <li class="nav-item text-decoration-underline">
-              <a href="#" id="about" class="nav-link link-body-emphasis">About</a>
-            </li>
-            <li class="nav-item text-decoration-underline">
-              <a href="#" id="favourites" class="nav-link link-body-emphasis">Favourites</a>
-            </li>
-            <li class="nav-item text-decoration-underline">
-              <a href="#" id="favourites" class="nav-link link-body-emphasis">Logout</a>
-            </li>
-          </div>
-        </ul>
-      </div>
-    </div>
-  </div>
-</nav>
-<!-- main section -->
 <body>
-  <div class="container">
-    <div class="row">
-      <div class="col mx-3">
-        <h3 class="user-disp">Welcome Back, {user}.</h3>
-        <h4 class="fw-lighter">What shall we eat today?</h4>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col mx-auto">
-        <a href="#">
-          <img src="/images/banner.gif" class="img-fluid d-flex mx-auto rounded-1" alt="logo">
-        </a>
-      </div>
-    </div>
-    <!-- search -->
+  <!-- navbar -->
+  <nav class="navbar navbar-expand-lg py-3 mb-5">
     <div class="container">
-      <div class="row mx-auto">
-        <div class="col-12 col-md-10 mx-auto">
-          <form class="form-inline" method="get" action="#">
-            <input type="text" id="cravingsInput" class="form-control py-2 w-100 rounded-5" placeholder="Tell us your cravings..."
-              aria-label="Search" aria-describedby="basic-addon1">
-          </form>
-        </div>
-        <div class="d-flex justify-content-center mt-5 mx-auto d-none d-sm-flex">
-          <button class="btn btn-outline-dark mx-5 px-5 rounded-5 shuffleButton" type="button">
-            <!-- Button randomizes locations into the container -->
-            Shuffle<img src="/images/refresh-icon.png" class="img-fluid" style="width: 24px; height: 24px;" alt="clover">
-          </button>
-            <button class="btn btn-outline-dark mx-5 px-5 rounded-5 enterButton" type="button">
-              Enter<img src="/images/enter.png" class="img-fluid" style="width: 24px; height: 24px;" alt="refresh-icon">
-          </button>
+      <div class="col fw-bold">
+        <div class="d-flex justify-content-between align-items-center fw-light">
+          <ul class="nav">
+            <li class="nav-item">
+              <a class="navbar-brand" href="#">
+                <img src="/images/fried-egg.png" alt="brand" class="img-fluid" width="35px" height="35px">
+              </a>
+            </li>
+          </ul>
+          <div class="d-flex justify-content-end">
+            <ul class="nav">
+              <li class="nav-item text-decoration-underline">
+                <a href="./pages/about.html" id="about" class="nav-link link-body-emphasis">About</a>
+              </li>
+            </div>
+          </ul>
         </div>
       </div>
     </div>
-    <!-- Small screen size -->
-    <div class="row d-sm-none d-md-none d-lg-none">
-      <div class="col col-sm-12 mx-auto mt-5 mt-sm-0 text-center">
-        <button class="btn btn-dark px-4 py-2 rounded-5 enterButton" type="button">Enter</button>
-      </div>
-      <div class="col-12 mt-4 text-center">
-        <a href="#" class="mt-2 text-black shuffleButton">Feeling Hungry?</a>
-      </div>
-    </div>
+  </nav>
 
-    <!-- Display search results -->
-    <div class="container " id="showSearch"> 
-      <!-- Add search-container in div above to hide -->
-      <div class="row align-items-center">
-        <div class="col-8 mx-auto mt-5">
-          <!-- Text here should only appear after user click "Enter" or "Enter button" -->
-          <h3 class="text-start mt-4 fw-semibold">Here's what we found.</h1>
-        </div>
-        <div class="fw-lighter text-justify">
-          <!-- Row 1 (card) -->
-            <div class="row">
-              <div class="col-12 col-lg-8 mx-auto">
-                <div class="card my-2 p-2">
-                  <div class="card-body d-flex justify-content-between align-items-center">
-                    <a href="#" class="resLink text-decoration-none text-dark">
-                      <span class="resName fw-medium">Name</span>
-                    </a>
-                    <div class="d-flex justify-content-end align-items-center mx-2">
-                      <button type="button" class="btn likeButton mx-2">
-                        <a><i class="bi bi-heart i-heart"></i></a>
-                      </button>
-                      <span class="mx-2">Ratings:</span>
-                      <span class="resRating fw-light">5.0</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          <!-- Row 2 (card) -->
-            <div class="row">
-              <div class="col-12 col-lg-8 mx-auto">
-                <div class="card my-2 p-2">
-                  <div class="card-body d-flex justify-content-between align-items-center">
-                    <a href="#" class="resLink text-decoration-none text-dark">
-                      <span class="resName fw-medium">Name</span>
-                    </a>
-                    <div class="d-flex justify-content-end align-items-center mx-2">
-                      <button type="button" class="btn likeButton mx-2">
-                        <a><i class="bi bi-heart i-heart"></i></a>
-                      </button>
-                      <span class="mx-2">Ratings:</span>
-                      <span class="resRating fw-light">5.0</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          <!-- Row 3 (card) -->
-            <div class="row">
-              <div class="col-12 col-lg-8 mx-auto">
-                <div class="card my-2 p-2">
-                  <div class="card-body d-flex justify-content-between align-items-center">
-                    <a href="#" class="resLink text-decoration-none text-dark">
-                      <span class="resName fw-medium">Name</span>
-                    </a>
-                    <div class="d-flex justify-content-end align-items-center mx-2">
-                      <button type="button" class="btn likeButton mx-2">
-                        <a><i class="bi bi-heart i-heart"></i></a>
-                      </button>
-                      <span class="mx-2">Ratings:</span>
-                      <span class="resRating fw-light">5.0</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          <!-- Row 4 (card) -->
-            <div class="row">
-              <div class="col-12 col-lg-8 mx-auto">
-                <div class="card my-2 p-2">
-                  <div class="card-body d-flex justify-content-between align-items-center">
-                    <a href="#" class="resLink text-decoration-none text-dark">
-                      <span class="resName fw-medium">Name</span>
-                    </a>
-                    <div class="d-flex justify-content-end align-items-center mx-2">
-                      <button type="button" class="btn likeButton mx-2">
-                        <a><i class="bi bi-heart i-heart"></i></a>
-                      </button>
-                      <span class="mx-2">Ratings:</span>
-                      <span class="resRating fw-light">5.0</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          <!-- Row 5 (card) -->
-            <div class="row">
-              <div class="col-12 col-lg-8 mx-auto">
-                <div class="card my-2 p-2">
-                  <div class="card-body d-flex justify-content-between align-items-center">
-                    <a href="#" class="resLink text-decoration-none text-dark">
-                      <span class="resName fw-medium">Name</span>
-                    </a>
-                    <div class="d-flex justify-content-end align-items-center mx-2">
-                      <button type="button" class="btn likeButton mx-2">
-                        <a><i class="bi bi-heart i-heart"></i></a>
-                      </button>
-                      <span class="mx-2">Ratings:</span>
-                      <span class="resRating fw-light">5.0</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          <!-- Current Page Index -->
-          <nav aria-label="..." class="d-flex justify-content-center mt-4">
-            <ul class="pagination pagination-sm">
-            </ul>
-          </nav>
-          <div class="d-flex justify-content-center mx-auto mt-3">
-            <button type="button" id="backButton" class="btn btn-outline-dark shadow-sm p-2 mx-3">Back</button>
-            <button type="button" id="loadMoreButton" class="btn btn-outline-dark shadow-sm p-2">Load More</button>
-          </div>
+  <div class="cover-container">
+    <div class="row">
+      <div class="col">
+        <div class="spacer"></div>
+        <div class="d-flex flex-column align-items-center">
+          <h1 class="mb-3 fs-1 font-monospace">Chi-She-Mo</h1>
+          <h4 class="mb-5 fw-light">Simplify Food.</h4>
+          <a href="/src/pages/home.html">
+            <button class="btn shadow rounded-5 px-5 py-3 fw-semibold" type="button">Try me</button>
+          </a>
         </div>
       </div>
-    </div>
-</body>
-<footer class="p-3 mt-5 sticky">
-  <hr class="mt-5">
-  <div class="container">
-    <div class="text-lg-start">
-      <p class="text-muted small mb-4 mb-lg-0">&copy; Chi-She-Mo 2024. All Rights Reserved.</p>
     </div>
   </div>
-</footer>
 
-<script src="/src/main.js"></script>
-<script src="/src/auth/index.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <footer class="p-3">
+    <div class="container">
+      <div class="text-lg-start">
+        <hr>
+        <p class="text-muted small mb-4 mb-lg-0">&copy; Chi-She-Mo 2024. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/src/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 
 </html>

@@ -10979,7 +10979,51 @@ footer.footer {
   height: 200px;
 }
 
-/* Custom font-style for chinese characters */
-.chinese {
-  font-family: 'Noto Serif TC', serif;
+/* Styles for About */
+.carousel {  
+  display: flex;
+  width: 100%;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory; /* <- the important piece */
+}  
+.item {
+  flex: 0 0 auto;
+  margin-right: 20px;
+  scroll-snap-align: start; /* <- the other important piece */
+}
+
+.carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.dots {
+  display: flex;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .carousel {
+    justify-content: center;
+  }
+
+  .dots {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .dot {
+    height: 15px;
+    width: 15px;
+    margin-right: 10px;
+    border-radius: 50%;
+    background-color: var(--bs-light);
+  }
+}
+/* Custom rows */
+.custom.row.justify-content-center {
+  max-height: 500px;
+  overflow-y: auto;
 }
