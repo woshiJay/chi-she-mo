@@ -1,11 +1,21 @@
 const express = require("express");
+const path = require("path");
 const fetch = require("node-fetch");
 const cors = require("cors");
 const app = express();
-const port = 5501;
+const port = process.env.PORT || 5501;
 
 app.use(express.json());
 app.use(cors());
+
+// Serve static files from the src directory
+app.use(express.static(path.join(__dirname, 'src')));
+
+// Catch-all handler for any request that doesn't match one above
+app.get('*', (req, res) =>{
+  res.sendFile(path.join(__dirname, 'src', 'index.html'));
+});
+
 
 // ----------------------------------------------------------------------
 // Database Routes
