@@ -1,7 +1,7 @@
 window.onload = () => {
     const userId = sessionStorage.getItem('userId');
     if (!userId) {
-      window.location.href = '../pages/login.html';
+      window.location.href = './pages/login.html';
     } else {
         fetch(`/get-username?uid=${userId}`)
         .then(resp => resp.json())

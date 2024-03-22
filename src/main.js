@@ -49,7 +49,7 @@ function initializeLikeButtons() {
 function addToFavourites(userResDB, heartIcon) {
   // console.log('Sent items: ', userResDB);
   // Send data to user_restaurants database
-  fetch('http://localhost:5501/api/user_restaurants', {
+  fetch('/api/user_restaurants', {
     method: 'POST', // Specify the method
     headers: {
       'Content-Type': 'application/json', // Set the content type header for JSON
@@ -73,7 +73,7 @@ function addToFavourites(userResDB, heartIcon) {
 
 function removeFromFavourites(userResDB, heartIcon) {
   // console.log(userResDB);
-  fetch(`http://localhost:5501/api/delete_user_restaurants?userID=${userResDB.userID}&placeID=${userResDB.placeID}`, {
+  fetch(`/api/delete_user_restaurants?userID=${userResDB.userID}&placeID=${userResDB.placeID}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -183,7 +183,7 @@ async function getLocation(event, userInput = '') {
 
 async function searchRestaurantByCoordinates(lat, lon) {
   try {
-      const response = await fetch("http://localhost:5501/getRestaurants", {
+      const response = await fetch("/getRestaurants", {
           method: "POST",
           headers: {"Content-Type": "application/json"},
           body: JSON.stringify({ lat, lon }),
@@ -201,7 +201,7 @@ async function searchRestaurantByCoordinates(lat, lon) {
 
 async function searchRestaurantByUserRequest(lat, lon, userInput) {
   try {
-      const response = await fetch("http://localhost:5501/getSearchedRestaurants", {
+      const response = await fetch("/getSearchedRestaurants", {
           method: "POST",
           headers: {"Content-Type": "application/json"},
           body: JSON.stringify({ lat, lon, userInput }),
@@ -227,7 +227,7 @@ async function checkLikedRestaurants(restaurants) {
 
 async function fetchUserLikedRestaurant(userId) {
   try {
-    const response = await fetch(`http://localhost:5501/api/user_restaurants?userID=${userId}`);
+    const response = await fetch(`/api/user_restaurants?userID=${userId}`);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
