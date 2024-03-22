@@ -7,6 +7,7 @@ window.onload = () => {
         .then(resp => resp.json())
         .then(data => {
             // Assuming 'data' has a 'username' property with the user's name
+            console.log({userId});
             const username = data.username;
             const usernameElement = document.querySelector('.user-disp');
             // Replace the placeholder text with the actual username
