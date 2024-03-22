@@ -1,9 +1,9 @@
 window.onload = () => {
     const userId = sessionStorage.getItem('userId');
     if (!userId) {
-      window.location.href = '/src/pages/login.html';
+      window.location.href = '../pages/login.html';
     } else {
-        fetch(`http://localhost:5501/get-username?uid=${userId}`)
+        fetch(`/get-username?uid=${userId}`)
         .then(resp => resp.json())
         .then(data => {
             // Assuming 'data' has a 'username' property with the user's name
@@ -12,7 +12,7 @@ window.onload = () => {
             // Replace the placeholder text with the actual username
             usernameElement.textContent = `Welcome Back, ${username}.`;
             
-        return fetch(`http://localhost:5501/api/user_restaurants?userID=${userId}`)
+        return fetch(`/api/user_restaurants?userID=${userId}`)
     })
       .then(resp => resp.json())
       .then(restaurants => {

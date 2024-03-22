@@ -3,7 +3,7 @@ window.onload = () => {
     if (!userId) {
         window.location.href = '../pages/login.html';
     } else {
-        fetch(`http://localhost:5501/get-username?uid=${userId}`)
+        fetch(`/get-username?uid=${userId}`)
         .then(resp => resp.json())
         .then(data => {
             // Assuming 'data' has a 'username' property with the user's name

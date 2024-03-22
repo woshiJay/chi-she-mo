@@ -42,29 +42,6 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-// const restaurantSchema = new mongoose.Schema({
-//   name: { 
-//     type: String,
-//     required: true
-//   },
-//   placeID: { 
-//     type: String,
-//     required: true,
-//     unique: true // This enforces `placeID` as a unique field across the collection
-//   },
-//   price_level: { 
-//     type: String,
-//     required: true
-//   },
-//   rating: { 
-//     type: String,
-//     required: true
-//   }
-//   // other restaurant fields...
-// });
-
-// const Restaurant = mongoose.model('Restaurant', restaurantSchema);
-
 const userRestaurantSchema = new mongoose.Schema({
   userID: { 
     type: String,
@@ -79,28 +56,6 @@ const userRestaurantSchema = new mongoose.Schema({
 });
 
 const UserRestaurant = mongoose.model('UserRestaurant', userRestaurantSchema);
-
-// add user to the database
-// app.post('/api/users', async (req, res) => {
-//   try {
-//     let user = new User(req.body);
-//     user = await user.save();
-//     res.send(user);
-//   } catch (error) {
-//     res.status(500).send(error);
-//   }
-// });
-
-// // Create a new restaurant
-// app.post('/api/restaurants', async (req, res) => {
-//   try {
-//     let restaurant = new Restaurant(req.body);
-//     restaurant = await restaurant.save();
-//     res.send(restaurant);
-//   } catch (error) {
-//     res.status(500).send(error);
-//   }
-// });
 
 // Check user liked restaurants when user does a search
 app.get('/api/user_restaurants', async (req, res) => {
@@ -148,17 +103,6 @@ app.delete('/api/delete_user_restaurants', async (req, res) => {
       res.status(500).send(error);
   }
 });
-
-// ... other routes ...
-// // example for adding user
-// const newUser = new User({
-//   name: 'John Doe',
-//   email: 'johndoe@example.com'
-// });
-
-// newUser.save()
-//   .then(doc => console.log('User added:', doc))
-//   .catch(err => console.error('Error adding user:', err));
 
 // ----------------------------------------------------------------------
 // Implement Gemini AI

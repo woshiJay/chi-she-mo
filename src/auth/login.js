@@ -15,7 +15,7 @@ async function submitLoginResponse(event) {
     const password = document.getElementById('password').value;
 
     try {
-        const response = await fetch('http://localhost:5501/signin', {
+        const response = await fetch('/signin', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
