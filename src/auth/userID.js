@@ -1,5 +1,6 @@
 window.onload = () => {
     const userId = sessionStorage.getItem('userId');
+    console.log("this is the userID: ", {userId});
     if (!userId) {
         window.location.href = '../pages/login.html';
     } else {
