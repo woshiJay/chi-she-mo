@@ -253,6 +253,7 @@ app.get('/get-username', async (req, res) => {
   userRef.once('value', (snapshot) => {
       const data = snapshot.val();
       if (data) {
+        console.log("data", data.username);
           res.status(200).json({ username: data.username });
       } else {
           res.status(404).json({ alert: "User not found!" });
