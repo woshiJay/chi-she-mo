@@ -5,6 +5,7 @@
 let currentResults = [];
 let currentIndex = 0;
 const itemsPerPage = 5;
+let userId = sessionStorage.getItem('userId');
 
 function initializeLikeButtons() {
   const likeButtons = document.querySelectorAll(".likeButton");
@@ -218,7 +219,7 @@ async function searchRestaurantByUserRequest(lat, lon, userInput) {
 }
 
 async function checkLikedRestaurants(restaurants) {
-  const userId = sessionStorage.getItem('userId');
+  // const userId = sessionStorage.getItem('userId');
   const userLikedRestaurants = await fetchUserLikedRestaurant(userId); // pass to fetching
   restaurants.forEach(restaurant => {
     restaurant.isLiked = userLikedRestaurants.some(likedRestaurant => likedRestaurant.place_id === restaurant.place_id);
