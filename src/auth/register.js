@@ -14,7 +14,7 @@ async function submitRegistrationResponse(event) {
     const password = document.getElementById('password').value;
 
     try {
-        const response = await fetch('http://localhost:5501/signup', {
+        const response = await fetch('/signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
