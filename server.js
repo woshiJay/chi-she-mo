@@ -1,6 +1,5 @@
 const express = require("express");
 const path = require("path");
-const fetch = require("node-fetch");
 const cors = require("cors");
 const app = express();
 const port = process.env.PORT || 5501;
@@ -227,6 +226,7 @@ const db = admin.database();
 // ----------------------------------------------------------------------
 const firebase = require("firebase/app");
 const firebaseAuth = require("firebase/auth");
+const fetch = require("node-fetch"); // Add the missing import statement for 'fetch'
 const firebaseConfig = {
   apiKey: "AIzaSyBTybXLML4LVemnnav7vAvvlwbd9XE0WQc",
   authDomain: "chi-se-mo.firebaseapp.com",
@@ -269,7 +269,7 @@ app.post('/signup', async (req, res) => {
     const userId = userRecord.uid;
     const userRef = db.ref(`users/${userId}`);
     await userRef.set({ username: username })
-    res.status(200).json({ redirect: '/src/login.html' });
+    res.status(200).json({ redirect: '/src/pages/login.html' });
   }
 });
 
@@ -291,30 +291,31 @@ app.post('/signin', async (req, res) => {
 // Sign out route
 app.get('/signout', async (req, res) => {
   firebaseAuth.getAuth().signOut()
-      .then(() => {
-          res.status(200).json({ message: "User signed out successfully!" })
-      })
-      .catch((error) => {
-      });
+    .then(() => {
+      res.status(200).json({ message: "User signed out successfully!" })
+    })
+    .catch((error) => {
+    });
 });
 
 // Get username route
 app.get('/get-username', async (req, res) => {
   const userId = req.query.uid;
   if (!userId) {
-      return res.status(400).json({ alert: "User ID is required!" });
+    return res.status(400).json({ alert: "User ID is required!" });
   }
   // get username from database here and return back to frontend
   const userRef = db.ref(`users/${userId}`);
   userRef.once('value', (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-          res.status(200).json({ username: data.username });
-      } else {
-          res.status(404).json({ alert: "User not found!" });
-      }
+    const data = snapshot.val();
+    if (data) {
+      res.status(200).json({ username: data.username });
+    } else {
+      res.status(404).json({ alert: "User not found!" });
+    }
   });
 });
+
 
 // ----------------------------------------------------------------------
 // Places API
