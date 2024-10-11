@@ -19,11 +19,13 @@ app.get('*', (req, res) =>{
 // Database Routes
 // ----------------------------------------------------------------------
 const mongoose = require('mongoose');
-require('dotenv').config();
+require('dotenv').config({ path: '.env' });
 
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+
+mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('Could not connect to MongoDB', err));
+
 
 // User Schema
 const userSchema = new mongoose.Schema({
