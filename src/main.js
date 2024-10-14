@@ -46,13 +46,14 @@ function initializeLikeButtons() {
   });
 }
 
-function addToFavourites(userResDB, heartIcon) {
+// function addToFavourites(userResDB, heartIcon) {
   // console.log('Sent items: ', userResDB);
   // Send data to user_restaurants database
+function addToFavourites(userResDB, heartIcon) {
   fetch('http://localhost:5501/api/user_restaurants', {
-    method: 'POST', // Specify the method
+    method: 'POST',
     headers: {
-      'Content-Type': 'application/json', // Set the content type header for JSON
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(userResDB)
   })
@@ -232,10 +233,10 @@ async function fetchUserLikedRestaurant(userId) {
       throw new Error('Network response was not ok');
     }
     const userLikedRestaurants = await response.json();
-    return userLikedRestaurants.map(restaurant=> restaurant.placeID); // return array of placeIDs
+    return userLikedRestaurants.map(restaurant => restaurant.placeID);
   } catch (error) {
     console.error("Error:", error);
-    return []; // return empty array if error
+    return [];
   }
 }
 

@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const path = require("path");
 const cors = require("cors");
@@ -16,205 +17,10 @@ app.get('*', (req, res) =>{
 });
 
 // ----------------------------------------------------------------------
-// Database Routes
-// ----------------------------------------------------------------------
-const mongoose = require('mongoose');
-require('dotenv').config({ path: '.env' });
-
-
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('Could not connect to MongoDB', err));
-
-
-// User Schema
-const userSchema = new mongoose.Schema({
-  name: { 
-    type: String,
-    required: true
-  },
-  email: { 
-    type: String,
-    required: true,
-    unique: true // This enforces `email` as a unique field across the collection
-  }
-  // other user fields...
-});
-
-const User = mongoose.model('User', userSchema);
-
-// const restaurantSchema = new mongoose.Schema({
-//   name: { 
-//     type: String,
-//     required: true
-//   },
-//   placeID: { 
-//     type: String,
-//     required: true,
-//     unique: true // This enforces `placeID` as a unique field across the collection
-//   },
-//   price_level: { 
-//     type: String,
-//     required: true
-//   },
-//   rating: { 
-//     type: String,
-//     required: true
-//   }
-//   // other restaurant fields...
-// });
-
-// const Restaurant = mongoose.model('Restaurant', restaurantSchema);
-
-const userRestaurantSchema = new mongoose.Schema({
-  userID: { 
-    type: String,
-  },
-  resName: {
-    type: String,
-  },
-  placeID: { 
-    type: String,
-    ref: 'Restaurant' // This creates a reference to the Restaurant model using the `placeID` field
-  },
-});
-
-const UserRestaurant = mongoose.model('UserRestaurant', userRestaurantSchema);
-
-// add user to the database
-// app.post('/api/users', async (req, res) => {
-//   try {
-//     let user = new User(req.body);
-//     user = await user.save();
-//     res.send(user);
-//   } catch (error) {
-//     res.status(500).send(error);
-//   }
-// });
-
-// // Create a new restaurant
-// app.post('/api/restaurants', async (req, res) => {
-//   try {
-//     let restaurant = new Restaurant(req.body);
-//     restaurant = await restaurant.save();
-//     res.send(restaurant);
-//   } catch (error) {
-//     res.status(500).send(error);
-//   }
-// });
-
-// Check user liked restaurants when user does a search
-app.get('/api/user_restaurants', async (req, res) => {
-  try {
-    const { userID } = req.query;
-    const userLikedRestaurants = await UserRestaurant.find({ userID: userID});
-    res.json(userLikedRestaurants);
-  } catch {
-    console.error("Error fetching liked restaurants: ", error);
-    res.status(500).json({error: "Error fetching data"});
-  }
-});
-
-// Create a new user-restaurant relationship
-app.post('/api/user_restaurants', async (req, res) => {
-  try {
-    let userRestaurant = new UserRestaurant(req.body);
-    userRestaurant = await userRestaurant.save();
-    res.send(userRestaurant);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-
-// when unlike, delete from database 
-app.delete('/api/delete_user_restaurants', async (req, res) => {
-  try {
-      const { userID, placeID } = req.query;
-      
-      if (!userID || !placeID) { //need to change to useremail
-          return res.status(400).send('Missing userId or placeId');
-      }
-
-      const result = await UserRestaurant.deleteOne({ 
-          userID: userID,
-          placeID: placeID
-      });
-
-      if (result.deletedCount === 0) {
-          return res.status(404).send('UserRestaurant not found');
-      }
-
-      res.send({ message: 'UserRestaurant deleted successfully' });
-  } catch (error) {
-      res.status(500).send(error);
-  }
-});
-
-// ... other routes ...
-// // example for adding user
-// const newUser = new User({
-//   name: 'John Doe',
-//   email: 'johndoe@example.com'
-// });
-
-// newUser.save()
-//   .then(doc => console.log('User added:', doc))
-//   .catch(err => console.error('Error adding user:', err));
-
-// ----------------------------------------------------------------------
-// Implement Gemini AI
-// ----------------------------------------------------------------------
-
-// const express = require('express');
-// const multer = require('multer');
-// const { GoogleGenerativeAI } = require("@google/generative-ai");
-
-// const app = express();
-// const upload = multer({ storage: multer.memoryStorage() }); // Using memory storage for simplicity
-
-// // Assume that you have set the API_KEY in your environment variables
-// const genAI = new GoogleGenerativeAI(process.env.API_KEY);
-
-// app.post('/ask-gemini-pro', upload.single('image'), async (req, res) => {
-//   try {
-//     // Check for the image and question in the request
-//     if (!req.file) {
-//       return res.status(400).send('No image file provided.');
-//     }
-//     if (!req.body.question) {
-//       return res.status(400).send('No question provided.');
-//     }
-
-//     const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
-//     const imagePart = {
-//       inlineData: {
-//         data: req.file.buffer.toString("base64"),
-//         mimeType: req.file.mimetype,
-//       },
-//     };
-
-//     // The question should be in the request body
-//     const prompt = req.body.question;
-
-//     const result = await model.generateContent([prompt, imagePart]);
-//     const response = await result.response;
-//     const text = response.text();
-//     res.send(text);
-//   } catch (error) {
-//     res.status(500).send(error.message);
-//   }
-// });
-
-// const PORT = process.env.PORT || 3000;
-// app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-
-
-// ----------------------------------------------------------------------
 // Initializing of Firebase Admin SDK
 // ----------------------------------------------------------------------
-const admin = require('firebase-admin')
-const { getAuth } = require("firebase-admin/auth");
+const admin = require('firebase-admin');
+const { getAuth } = require("firebase/auth");
 const serviceAccount = require("./serviceAccount.json");
 
 admin.initializeApp({
@@ -228,15 +34,15 @@ const db = admin.database();
 // ----------------------------------------------------------------------
 const firebase = require("firebase/app");
 const firebaseAuth = require("firebase/auth");
-const fetch = require("node-fetch"); // Add the missing import statement for 'fetch'
+const fetch = require("node-fetch");
 const firebaseConfig = {
-  apiKey: "AIzaSyBTybXLML4LVemnnav7vAvvlwbd9XE0WQc",
-  authDomain: "chi-se-mo.firebaseapp.com",
-  databaseURL: "https://chi-se-mo-default-rtdb.asia-southeast1.firebasedatabase.app/",
-  projectId: "chi-se-mo",
-  storageBucket: "chi-se-mo.appspot.com",
-  messagingSenderId: "460919636016",
-  appId: "1:460919636016:web:07051c3573000ca1b12df5"
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.FIREBASE_DATABASE_URL,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -247,7 +53,6 @@ firebase.initializeApp(firebaseConfig);
 
 // Sign up route
 app.post('/signup', async (req, res) => {
-
   const { username, email, password } = req.body;
   if (!username || !email || !password) {
       res.status(400).json({ alert: 'Please ensure that all fields are filled.' });
@@ -255,23 +60,22 @@ app.post('/signup', async (req, res) => {
   }
   const auth = getAuth();
 
-  const userRecord = await auth.createUser({
+  try {
+    const userRecord = await auth.createUser({
       email: email,
       password: password
-  })
-      .catch((error) => {
-          if (error.code === 'auth/email-already-exists') {
-              res.status(400).json({ alert: 'Email already exists! Please proceed to Login.' });
-          } else {
-              res.status(400).json({ alert: error.code })
-          }
-      })
-  // add user to the database
-  if (userRecord) {
+    });
+
     const userId = userRecord.uid;
     const userRef = db.ref(`users/${userId}`);
-    await userRef.set({ username: username })
+    await userRef.set({ username: username });
     res.status(200).json({ redirect: '/src/pages/login.html' });
+  } catch (error) {
+    if (error.code === 'auth/email-already-exists') {
+      res.status(400).json({ alert: 'Email already exists! Please proceed to Login.' });
+    } else {
+      res.status(400).json({ alert: error.code });
+    }
   }
 });
 
@@ -280,24 +84,22 @@ app.post('/signin', async (req, res) => {
   const { email, password } = req.body;
   const firebaseAuthentication = firebaseAuth.getAuth();
 
-  firebaseAuth.signInWithEmailAndPassword(firebaseAuthentication, email, password)
-      .then((userCredential) => {
-          // Signed in
-          res.status(200).json({ message: "User signed in successfully!", uid: userCredential.user.uid })
-      })
-      .catch((error) => {
-          res.status(401).json({ alert: 'Invalid email or password! Please try again.' });
-      });
+  try {
+    const userCredential = await firebaseAuth.signInWithEmailAndPassword(firebaseAuthentication, email, password);
+    res.status(200).json({ message: "User signed in successfully!", uid: userCredential.user.uid });
+  } catch (error) {
+    res.status(401).json({ alert: 'Invalid email or password! Please try again.' });
+  }
 });
 
 // Sign out route
 app.get('/signout', async (req, res) => {
-  firebaseAuth.getAuth().signOut()
-    .then(() => {
-      res.status(200).json({ message: "User signed out successfully!" })
-    })
-    .catch((error) => {
-    });
+  try {
+    await firebaseAuth.getAuth().signOut();
+    res.status(200).json({ message: "User signed out successfully!" });
+  } catch (error) {
+    res.status(500).json({ alert: "Error signing out" });
+  }
 });
 
 // Get username route
@@ -306,18 +108,66 @@ app.get('/get-username', async (req, res) => {
   if (!userId) {
     return res.status(400).json({ alert: "User ID is required!" });
   }
-  // get username from database here and return back to frontend
   const userRef = db.ref(`users/${userId}`);
-  userRef.once('value', (snapshot) => {
+  try {
+    const snapshot = await userRef.once('value');
     const data = snapshot.val();
     if (data) {
       res.status(200).json({ username: data.username });
     } else {
       res.status(404).json({ alert: "User not found!" });
     }
-  });
+  } catch (error) {
+    res.status(500).json({ alert: "Error fetching user data" });
+  }
 });
 
+// ----------------------------------------------------------------------
+// User Restaurants
+// ----------------------------------------------------------------------
+
+// Check user liked restaurants when user does a search
+app.get('/api/user_restaurants', async (req, res) => {
+  try {
+    const { userID } = req.query;
+    const userLikedRestaurantsRef = db.ref(`user_restaurants/${userID}`);
+    const snapshot = await userLikedRestaurantsRef.once('value');
+    const userLikedRestaurants = snapshot.val() || {};
+    res.json(Object.values(userLikedRestaurants));
+  } catch (error) {
+    console.error("Error fetching liked restaurants: ", error);
+    res.status(500).json({error: "Error fetching data"});
+  }
+});
+
+// Create a new user-restaurant relationship
+app.post('/api/user_restaurants', async (req, res) => {
+  try {
+    const { userID, resName, placeID } = req.body;
+    const userRestaurantRef = db.ref(`user_restaurants/${userID}/${placeID}`);
+    await userRestaurantRef.set({ resName, placeID });
+    res.status(200).json({ message: "Restaurant added successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Error adding restaurant" });
+  }
+});
+
+// When unlike, delete from database 
+app.delete('/api/delete_user_restaurants', async (req, res) => {
+  try {
+    const { userID, placeID } = req.query;
+    
+    if (!userID || !placeID) {
+      return res.status(400).json({ alert: "User ID and Place ID are required!" });
+    }
+
+    const userRestaurantRef = db.ref(`user_restaurants/${userID}/${placeID}`);
+    await userRestaurantRef.remove();
+    res.status(200).json({ message: 'UserRestaurant deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: "Error deleting restaurant" });
+  }
+});
 
 // ----------------------------------------------------------------------
 // Places API
@@ -326,15 +176,12 @@ app.get('/get-username', async (req, res) => {
 // For random nearby
 app.post("/getRestaurants", async (req, res) => {
   const { lat, lon } = req.body;
-  const apiKey = "AIzaSyBcvo-BCmcl79jG9BnDmZYHqoFpLc2CdVc";
+  const apiKey = process.env.GOOGLE_PLACES_API_KEY;
   const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lon}&radius=5000&type=restaurant&key=${apiKey}`;
 
   try {
     const apiResponse = await fetch(url);
     const apiData = await apiResponse.json();
-
-    console.log("Reply from Server");
-    console.log(apiData);
 
     if (apiResponse.ok) {
       const restaurants = apiData.results.map((restaurant) => ({
@@ -344,13 +191,11 @@ app.post("/getRestaurants", async (req, res) => {
       }));
 
       res.json(restaurants);
-
     } else {
       res.status(apiResponse.status).json({ error: apiData.error.message || "Error Fetching Data."})
     }
-
   } catch (error) {
-    res.status(500).send({ error: "Error Fetching Data." });
+    res.status(500).json({ error: "Error Fetching Data." });
   }
 });
 
@@ -358,15 +203,13 @@ app.post("/getRestaurants", async (req, res) => {
 app.post("/getSearchedRestaurants", async (req, res) => {
   const { lat, lon, userInput } = req.body;
 
-  const apiKey = "AIzaSyBcvo-BCmcl79jG9BnDmZYHqoFpLc2CdVc";
+  const apiKey = process.env.GOOGLE_PLACES_API_KEY;
   const query = encodeURIComponent(userInput);
   const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?location=${lat},${lon}&query=${query}&radius=5000&type=restaurant&key=${apiKey}`;
 
   try {
     const apiResponse = await fetch(url);
     const apiData = await apiResponse.json();
-    console.log("Reply from Server");
-    console.log(apiData);
 
     if (apiResponse.ok) {
       const restaurants = apiData.results.map((restaurant) => ({
@@ -376,18 +219,14 @@ app.post("/getSearchedRestaurants", async (req, res) => {
       }));
 
       res.json(restaurants);
-
     } else {
       res.status(apiResponse.status).json({ error: apiData.error.message || "Error Fetching Data."})
     }
-
   } catch (error) {
-    res.status(500).send({ error: "Error Fetching Data." });
+    res.status(500).json({ error: "Error Fetching Data." });
   }
 });
-
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
-
