@@ -20,7 +20,7 @@ app.get('*', (req, res) =>{
 // Initializing of Firebase Admin SDK
 // ----------------------------------------------------------------------
 const admin = require('firebase-admin');
-const { getAuth } = require("firebase/auth");
+const { getAuth } = require("firebase-admin/auth");
 const serviceAccount = require("./serviceAccount.json");
 
 admin.initializeApp({
@@ -52,30 +52,46 @@ firebase.initializeApp(firebaseConfig);
 // ----------------------------------------------------------------------
 
 // Sign up route
+// app.post('/signup', async (req, res) => {
+//   const { username, email, password } = req.body;
+//   if (!username || !email || !password) {
+//       res.status(400).json({ alert: 'Please ensure that all fields are filled.' });
+//       return;
+//   }
+//   const auth = getAuth();
+
+//   try {
+//     const userRecord = await auth.createUser({
+//       email: email,
+//       password: password
+//     });
+
+//     const userId = userRecord.uid;
+//     const userRef = db.ref(`users/${userId}`);
+//     await userRef.set({ username: username });
+//     res.status(200).json({ redirect: '/src/pages/login.html' });
+//   } catch (error) {
+//     if (error.code === 'auth/email-already-exists') {
+//       res.status(400).json({ alert: 'Email already exists! Please proceed to Login.' });
+//     } else {
+//       res.status(400).json({ alert: error.code });
+//     }
+//   }
+// });
+
 app.post('/signup', async (req, res) => {
   const { username, email, password } = req.body;
   if (!username || !email || !password) {
-      res.status(400).json({ alert: 'Please ensure that all fields are filled.' });
-      return;
+    return res.status(400).json({ alert: 'Please ensure that all fields are filled.' });
   }
-  const auth = getAuth();
-
+  
   try {
-    const userRecord = await auth.createUser({
-      email: email,
-      password: password
-    });
-
-    const userId = userRecord.uid;
-    const userRef = db.ref(`users/${userId}`);
-    await userRef.set({ username: username });
+    const userRecord = await admin.auth().createUser({ email, password });
+    await db.ref(`users/${userRecord.uid}`).set({ username });
     res.status(200).json({ redirect: '/src/pages/login.html' });
   } catch (error) {
-    if (error.code === 'auth/email-already-exists') {
-      res.status(400).json({ alert: 'Email already exists! Please proceed to Login.' });
-    } else {
-      res.status(400).json({ alert: error.code });
-    }
+    console.error("Signup Error:", error);  // Log errors for better debugging
+    res.status(400).json({ alert: error.message });
   }
 });
 
@@ -86,7 +102,18 @@ app.post('/signin', async (req, res) => {
 
   try {
     const userCredential = await firebaseAuth.signInWithEmailAndPassword(firebaseAuthentication, email, password);
-    res.status(200).json({ message: "User signed in successfully!", uid: userCredential.user.uid });
+    const userId = userCredential.user.uid;
+
+    // Fetch the user's data
+    const userRef = db.ref(`users/${userId}`);
+    const snapshot = await userRef.once('value');
+    const data = snapshot.val();
+
+    if (data) {
+      res.status(200).json({ uid: userId, username: data.username });
+    } else {
+      res.status(404).json({ alert: "User not found!" });
+    }
   } catch (error) {
     res.status(401).json({ alert: 'Invalid email or password! Please try again.' });
   }
@@ -104,20 +131,26 @@ app.get('/signout', async (req, res) => {
 
 // Get username route
 app.get('/get-username', async (req, res) => {
+  console.log("Received GET request for /get-username");  // Add this log
   const userId = req.query.uid;
   if (!userId) {
     return res.status(400).json({ alert: "User ID is required!" });
   }
-  const userRef = db.ref(`users/${userId}`);
+
   try {
+    const userRef = db.ref(`users/${userId}`);
     const snapshot = await userRef.once('value');
     const data = snapshot.val();
+
     if (data) {
+      console.log("User Data:", data);
+      res.setHeader('Cache-Control', 'no-store'); // Prevent caching
       res.status(200).json({ username: data.username });
     } else {
       res.status(404).json({ alert: "User not found!" });
     }
   } catch (error) {
+    console.error("Error fetching user data:", error);
     res.status(500).json({ alert: "Error fetching user data" });
   }
 });

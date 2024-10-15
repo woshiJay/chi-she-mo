@@ -1,6 +1,11 @@
 // import { } from '/src/api/geolocation.js'; // import getLocation
 // import { initializeLikeButtons } from '/src/favourite.js';
 
+// base URL
+// const baseURL = window.location.origin;
+const baseURL = "http://localhost:5501";
+console.log("baseURL", baseURL);
+
 // Page Indexing
 let currentResults = [];
 let currentIndex = 0;
