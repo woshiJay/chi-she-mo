@@ -1,16 +1,18 @@
+const baseURL = window.location.origin;
+
 window.onload = async () => {
   const userId = sessionStorage.getItem('userId');
   if (!userId) {
     window.location.href = '/src/pages/login.html';
   } else {
     try {
-      const resp = await fetch(`http://localhost:5501/get-username?uid=${userId}`);
+      const resp = await fetch(`${baseURL}/get-username?uid=${userId}`);
       const data = await resp.json();
       const username = data.username;
       const usernameElement = document.querySelector('.user-disp');
       usernameElement.textContent = `Welcome Back, ${username}.`;
 
-      const resp2 = await fetch(`http://localhost:5501/api/user_restaurants?userID=${userId}`);
+      const resp2 = await fetch(`${baseURL}/api/user_restaurants?userID=${userId}`);      
       const restaurants = await resp2.json();
       const container = document.querySelector('.row.justify-content-center');
       container.innerHTML = '';
