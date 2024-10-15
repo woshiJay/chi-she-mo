@@ -28,7 +28,7 @@ async function submitLoginResponse(event) {
         const data = await response.json();
         if (data.uid) {
             sessionStorage.setItem('userId', data.uid);
-            window.location.href = '/src/pages/home.html';
+            window.location.href = `${window.location.origin}/pages/home.html`;
         } else if (data.alert) {
             alert(data.alert);
         } else {
