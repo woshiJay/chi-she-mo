@@ -37,3 +37,4 @@ async function submitLoginResponse(event) {
         console.error("Error:", error);
     }
 }
+

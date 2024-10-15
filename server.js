@@ -16,11 +16,6 @@ app.get('*', (req, res) =>{
   res.sendFile(path.join(__dirname, 'src', 'index.html'));
 });
 
-app.use((req, res, next) => {
-  res.setHeader('Cache-Control', 'no-store');  // Disable caching
-  next();
-});
-
 // ----------------------------------------------------------------------
 // Initializing of Firebase Admin SDK
 // ----------------------------------------------------------------------
@@ -140,13 +135,20 @@ app.get('/get-username', async (req, res) => {
 app.get('/api/user_restaurants', async (req, res) => {
   try {
     const { userID } = req.query;
+    if (!userID) {
+      return res.status(400).json({ error: 'User ID is required' });
+    }
     const userLikedRestaurantsRef = db.ref(`user_restaurants/${userID}`);
     const snapshot = await userLikedRestaurantsRef.once('value');
     const userLikedRestaurants = snapshot.val() || {};
-    res.json(Object.values(userLikedRestaurants));
+    const formattedRestaurants = Object.values(userLikedRestaurants).map((res) => ({
+      resName: res.resName,
+      placeID: res.placeID
+    }));
+    res.json(formattedRestaurants);
   } catch (error) {
-    console.error("Error fetching liked restaurants: ", error);
-    res.status(500).json({error: "Error fetching data"});
+    console.error('Error fetching liked restaurants:', error);
+    res.status(500).json({ error: 'Failed to fetch liked restaurants' });
   }
 });
 
@@ -154,27 +156,31 @@ app.get('/api/user_restaurants', async (req, res) => {
 app.post('/api/user_restaurants', async (req, res) => {
   try {
     const { userID, resName, placeID } = req.body;
+    if (!userID || !resName || !placeID) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+    console.log("Data added:", { resName, placeID, userID });
     const userRestaurantRef = db.ref(`user_restaurants/${userID}/${placeID}`);
     await userRestaurantRef.set({ resName, placeID });
     res.status(200).json({ message: "Restaurant added successfully" });
   } catch (error) {
+    console.error('Error adding restaurant:', error);
     res.status(500).json({ error: "Error adding restaurant" });
   }
 });
 
-// When unlike, delete from database 
+// When unlike, delete from database
 app.delete('/api/delete_user_restaurants', async (req, res) => {
   try {
     const { userID, placeID } = req.query;
-    
     if (!userID || !placeID) {
-      return res.status(400).json({ alert: "User ID and Place ID are required!" });
+      return res.status(400).json({ error: "User ID and Place ID are required!" });
     }
-
     const userRestaurantRef = db.ref(`user_restaurants/${userID}/${placeID}`);
     await userRestaurantRef.remove();
     res.status(200).json({ message: 'UserRestaurant deleted successfully' });
   } catch (error) {
+    console.error('Error deleting restaurant:', error);
     res.status(500).json({ error: "Error deleting restaurant" });
   }
 });

@@ -1,6 +1,4 @@
-// import { } from '/src/api/geolocation.js'; // import getLocation
-// import { initializeLikeButtons } from '/src/favourite.js';
-
+// original code of main.js
 // base URL
 // const baseURL = window.location.origin;
 const baseURL = "http://localhost:5501";
@@ -15,26 +13,11 @@ function initializeLikeButtons() {
   const likeButtons = document.querySelectorAll(".likeButton");
 
   likeButtons.forEach((button) => {
-    button.addEventListener("click", function () {
+    button.addEventListener("click", async function () {
       const heartIcon = this.querySelector(".i-heart");
-
-      heartIcon.classList.toggle("bi-heart");
-      heartIcon.classList.toggle("bi-heart-fill");
-
-      const isFavourite = heartIcon.classList.contains("bi-heart-fill");
       const container = button.closest('.card-body'); 
       const name = container.querySelector(".resName").textContent;
       const placeID = container.querySelector(".resLink").href.split("place_id:")[1];
-
-      const restaurantIndex = currentResults.findIndex(restaurant => restaurant.place_id === placeID);
-
-      if (restaurantIndex !== -1) {
-        currentResults[restaurantIndex].isLiked = !currentResults[restaurantIndex].isLiked;
-        heartIcon.classList.toggle("bi-heart");
-        heartIcon.classList.toggle("bi-heart-fill");
-      } else {
-        console.error("Restaurant not found in current results");
-      }
 
       const userResDB = {
         userID: sessionStorage.getItem("userId"),
@@ -42,84 +25,82 @@ function initializeLikeButtons() {
         placeID: placeID
       };
 
-      if (isFavourite) {
-        addToFavourites(userResDB, heartIcon);
-      } else {
-        removeFromFavourites(userResDB, heartIcon);
+      const isFavourite = heartIcon.classList.contains("bi-heart-fill");
+
+      try {
+        if (!isFavourite) {
+          await addToFavourites(userResDB, heartIcon);
+        } else {
+          await removeFromFavourites(userResDB, heartIcon);
+        }
+
+        // Update the currentResults array
+        const restaurantIndex = currentResults.findIndex(restaurant => restaurant.place_id === placeID);
+        if (restaurantIndex !== -1) {
+          currentResults[restaurantIndex].isLiked = !isFavourite;
+        }
+      } catch (error) {
+        console.error("Error updating like status:", error);
       }
     });
   });
 }
 
-// function addToFavourites(userResDB, heartIcon) {
-  // console.log('Sent items: ', userResDB);
-  // Send data to user_restaurants database
-function addToFavourites(userResDB, heartIcon) {
-  fetch('http://localhost:5501/api/user_restaurants', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(userResDB)
-  })
-    .then(response => response.json())
-    .then(data => {
-      console.log('Sent to userRes DB:', data);
-      heartIcon.classList.add("bi-heart-fill");
-      heartIcon.classList.remove("bi-heart");
-      alert('Restaurant added to favourites');
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-      heartIcon.classList.remove("bi-heart-fill");
-      heartIcon.classList.add("bi-heart");
-      alert('An error occurred while adding the restaurant.');
-    });
-}
+// async function addToFavourites(userResDB, heartIcon) {
+//   try {
+//     const response = await fetch('http://localhost:5501/api/user_restaurants', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify(userResDB)
+//     });
+//     const data = await response.json();
+//     console.log('Sent to userRes DB:', data);
+//     heartIcon.classList.add("bi-heart-fill");
+//     heartIcon.classList.remove("bi-heart");
+//     alert('Restaurant added to favourites');
+//   } catch (error) {
+//     console.error('Error:', error);
+//     alert('An error occurred while adding the restaurant.');
+//   }
+// }
 
-function removeFromFavourites(userResDB, heartIcon) {
-  // console.log(userResDB);
-  fetch(`http://localhost:5501/api/delete_user_restaurants?userID=${userResDB.userID}&placeID=${userResDB.placeID}`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-    }
-  })
-  .then (response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    } 
-    return response.json();
-  })
-  .then(data => {
-    console.log('Deleted from userRes DB:', data);
-    heartIcon.classList.remove("bi-heart-fill");
-    heartIcon.classList.add("bi-heart");
-    alert('Restaurant removed from favourites');
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-    heartIcon.classList.add("bi-heart-fill");
-    heartIcon.classList.remove("bi-heart");
-    alert('An error occurred while removing the restaurant.');
-  }
-)};
+// async function removeFromFavourites(userResDB, heartIcon) {
+//   try {
+//     const response = await fetch(`http://localhost:5501/api/delete_user_restaurants?userID=${userResDB.userID}&placeID=${userResDB.placeID}`, {
+//       method: 'DELETE',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       }
+//     });
+//     if (!response.ok) {
+//       throw new Error('Network response was not ok');
+//     } 
+//     const data = await response.json();
+//     console.log('Deleted from userRes DB:', data);
+//     heartIcon.classList.remove("bi-heart-fill");
+//     heartIcon.classList.add("bi-heart");
+//     alert('Restaurant removed from favourites');
+//   } catch (error) {
+//     console.error('Error:', error);
+//     alert('An error occurred while removing the restaurant.');
+//   }
+// }
 
 function initializeLoadMoreButton() {
   const loadMoreButton = document.getElementById("loadMoreButton");
-
-  loadMoreButton.addEventListener("click", () => {
-    // Load more results
-    updateRestaurantContainer();
+  loadMoreButton.addEventListener("click", async () => {
+    await updateRestaurantContainer();
   });
 }
 
 function initializeBackButton() {
   const backButton = document.getElementById("backButton");
-
-  backButton.addEventListener("click", () => {
-      currentIndex -= itemsPerPage * 2;
-      updateRestaurantContainer();
+  backButton.addEventListener("click", async () => {
+    currentIndex -= itemsPerPage * 2;
+    if (currentIndex < 0) currentIndex = 0;
+    await updateRestaurantContainer();
   });
 }
 
@@ -227,7 +208,8 @@ async function checkLikedRestaurants(restaurants) {
   const userId = sessionStorage.getItem('userId');
   const userLikedRestaurants = await fetchUserLikedRestaurant(userId); // pass to fetching
   restaurants.forEach(restaurant => {
-    restaurant.isLiked = userLikedRestaurants.some(likedRestaurant => likedRestaurant.place_id === restaurant.place_id);
+    // restaurant.isLiked = userLikedRestaurants.some(likedRestaurant => likedRestaurant.place_id === restaurant.place_id);
+    restaurant.isLiked = userLikedRestaurants.includes(restaurant.place_id);
   });
 }
 
@@ -235,64 +217,114 @@ async function fetchUserLikedRestaurant(userId) {
   try {
     const response = await fetch(`http://localhost:5501/api/user_restaurants?userID=${userId}`);
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-    const userLikedRestaurants = await response.json();
-    return userLikedRestaurants.map(restaurant => restaurant.placeID);
+    const data = await response.json();
+    console.log('Fetched liked restaurants:', data);
+    return data.map(restaurant => restaurant.placeID);
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error fetching liked restaurants:", error);
     return [];
   }
 }
 
 async function updateRestaurantContainer() {
+  try {
+    const userId = sessionStorage.getItem('userId');
+    const userLikedRestaurants = await fetchUserLikedRestaurant(userId);
+
+    const restaurantElements = document.querySelectorAll(".card");
+    const showEachResults = currentResults.slice(currentIndex, currentIndex + itemsPerPage);
+
+    showEachResults.forEach((restaurant, index) => {
+      if (index < restaurantElements.length) {
+        const element = restaurantElements[index];
+        const nameElement = element.querySelector(".resName");
+        const ratingElement = element.querySelector(".resRating");
+        const linkElement = element.querySelector(".resLink");
+        const likeButton = element.querySelector(".likeButton");
+        const heartIcon = likeButton.querySelector(".i-heart");
+
+        nameElement.textContent = restaurant.name;
+        ratingElement.textContent = restaurant.rating;
+        linkElement.href = `https://www.google.com/maps/place/?q=place_id:${restaurant.place_id}`;
+        linkElement.target = "_blank";
+
+        const isLiked = userLikedRestaurants.includes(restaurant.place_id);
+        heartIcon.classList.toggle("bi-heart-fill", isLiked);
+        heartIcon.classList.toggle("bi-heart", !isLiked);
+
+        // Update the like button event listener
+        likeButton.onclick = async function() {
+          await toggleLike(restaurant, heartIcon);
+        };
+      }
+    });
+
+    // Update pagination and buttons
+    currentIndex += itemsPerPage;
+    const backButton = document.getElementById("backButton");
+    const loadMoreButton = document.getElementById("loadMoreButton");
+    backButton.style.display = currentIndex > itemsPerPage ? "block" : "none";
+    loadMoreButton.style.display = currentIndex < currentResults.length ? "block" : "none";
+
+    console.log("Container Updated");
+    toggleSearchDisplay(true);
+    updatePagination();
+  } catch (error) {
+    console.error("Error updating restaurant container:", error);
+  }
+}
+
+async function toggleLike(restaurant, heartIcon) {
   const userId = sessionStorage.getItem('userId');
-  const userLikedRestaurants = await fetchUserLikedRestaurant(userId);
+  const isCurrentlyLiked = heartIcon.classList.contains("bi-heart-fill");
 
-  const restaurantNameElements = document.querySelectorAll(".resName");
-  const restaurantRatingElements = document.querySelectorAll(".resRating");
-  const restaurantLinks = document.querySelectorAll(".resLink");
-  const backButton = document.getElementById("backButton");
-  const loadMoreButton = document.getElementById("loadMoreButton");
-
-  const showEachResults = currentResults.slice(currentIndex, currentIndex + itemsPerPage);
-  showEachResults.forEach((restaurant, index) => {
-    const likeButton = document.querySelectorAll(".likeButton")[index];
-    const heartIcon = likeButton.querySelector(".i-heart");
-
-    if (userLikedRestaurants.includes(restaurant.place_id)) {
-      heartIcon.classList.add("bi-heart-fill");
-      heartIcon.classList.remove("bi-heart");
+  try {
+    if (isCurrentlyLiked) {
+      await removeFromFavourites(userId, restaurant.place_id);
     } else {
-      heartIcon.classList.add("bi-heart");
-      heartIcon.classList.remove("bi-heart-fill");
+      await addToFavourites(userId, restaurant.name, restaurant.place_id);
     }
 
-    if (index < restaurantNameElements.length) {
-        restaurantNameElements[index].textContent = restaurant.name;
-        restaurantRatingElements[index].textContent = restaurant.rating;
-        restaurantLinks[index].href = `https://www.google.com/maps/place/?q=place_id:${restaurant.place_id}`;
-        restaurantLinks[index].target = "_blank";
-      } else {
-      // clear remaining containers if there are no more results left
-        restaurantNameElements[index].textContent = "";
-        restaurantRatingElements[index].textContent = "";
-        restaurantLinks[index].href = "";
+    heartIcon.classList.toggle("bi-heart-fill");
+    heartIcon.classList.toggle("bi-heart");
+
+    // Update the restaurant's liked status in currentResults
+    const index = currentResults.findIndex(r => r.place_id === restaurant.place_id);
+    if (index !== -1) {
+      currentResults[index].isLiked = !isCurrentlyLiked;
     }
+  } catch (error) {
+    console.error("Error toggling like status:", error);
+    alert("Failed to update like status. Please try again.");
+  }
+}
+
+async function addToFavourites(userId, resName, placeID) {
+  const response = await fetch('http://localhost:5501/api/user_restaurants', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userID: userId, resName, placeID })
   });
 
-  currentIndex += itemsPerPage;
-  console.log("CurrentIndex: ", currentIndex);
+  if (!response.ok) {
+    throw new Error('Failed to add to favorites');
+  }
 
-  // Hide/Show backButton based on current index
-  backButton.style.display = currentIndex > itemsPerPage ? "block" : "none";
+  console.log('Added to favorites:', await response.json());
+}
 
-  // Hide/Show loadMoreButton based on current index
-  loadMoreButton.style.display = (currentIndex < currentResults.length) ? "block" : "none";
+async function removeFromFavourites(userId, placeID) {
+  const response = await fetch(`http://localhost:5501/api/delete_user_restaurants?userID=${userId}&placeID=${placeID}`, {
+    method: 'DELETE'
+  });
 
-  console.log("Container Updated");
-  toggleSearchDisplay(true);
-  updatePagination();
+  if (!response.ok) {
+    throw new Error('Failed to remove from favorites');
+  }
+
+  console.log('Removed from favorites:', await response.json());
 }
 
 function updatePagination() {
