@@ -16,6 +16,11 @@ app.get('*', (req, res) =>{
   res.sendFile(path.join(__dirname, 'src', 'index.html'));
 });
 
+app.use((req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store');  // Disable caching
+  next();
+});
+
 // ----------------------------------------------------------------------
 // Initializing of Firebase Admin SDK
 // ----------------------------------------------------------------------
@@ -50,34 +55,6 @@ firebase.initializeApp(firebaseConfig);
 // ----------------------------------------------------------------------
 // Authentication
 // ----------------------------------------------------------------------
-
-// Sign up route
-// app.post('/signup', async (req, res) => {
-//   const { username, email, password } = req.body;
-//   if (!username || !email || !password) {
-//       res.status(400).json({ alert: 'Please ensure that all fields are filled.' });
-//       return;
-//   }
-//   const auth = getAuth();
-
-//   try {
-//     const userRecord = await auth.createUser({
-//       email: email,
-//       password: password
-//     });
-
-//     const userId = userRecord.uid;
-//     const userRef = db.ref(`users/${userId}`);
-//     await userRef.set({ username: username });
-//     res.status(200).json({ redirect: '/src/pages/login.html' });
-//   } catch (error) {
-//     if (error.code === 'auth/email-already-exists') {
-//       res.status(400).json({ alert: 'Email already exists! Please proceed to Login.' });
-//     } else {
-//       res.status(400).json({ alert: error.code });
-//     }
-//   }
-// });
 
 app.post('/signup', async (req, res) => {
   const { username, email, password } = req.body;
