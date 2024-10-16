@@ -4,6 +4,7 @@ const path = require("path");
 const cors = require("cors");
 const app = express();
 const port = process.env.PORT || 5501;
+const functions = require('firebase-functions')
 
 app.use(express.json());
 app.use(cors());
@@ -13,13 +14,17 @@ app.use(cors());
 // ----------------------------------------------------------------------
 const admin = require('firebase-admin');
 const { getAuth } = require("firebase-admin/auth");
-const serviceAccount = require("./serviceAccount.json");
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://chi-se-mo-default-rtdb.asia-southeast1.firebasedatabase.app/"
-});
+if (!admin.apps.length) {
+  admin.initializeApp();  // No need for service account in Firebase Functions
+}
+
 const db = admin.database();
+
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount),
+//   databaseURL: "https://chi-se-mo-default-rtdb.asia-southeast1.firebasedatabase.app/"
+// });
 
 // ----------------------------------------------------------------------
 // Initializing of Firebase SDK
@@ -28,13 +33,13 @@ const firebase = require("firebase/app");
 const firebaseAuth = require("firebase/auth");
 const fetch = require("node-fetch");
 const firebaseConfig = {
-  apiKey: process.env.FIREBASE_API_KEY,
-  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-  databaseURL: process.env.FIREBASE_DATABASE_URL,
-  projectId: process.env.FIREBASE_PROJECT_ID,
-  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.FIREBASE_APP_ID
+  apiKey: functions.config().app.firebase_api_key,
+  authDomain: functions.config().app.firebase_auth_domain,
+  databaseURL: functions.config().app.firebase_database_url,
+  projectId: functions.config().app.firebase_project_id,
+  storageBucket: functions.config().app.firebase_storage_bucket,
+  messagingSenderId: functions.config().app.firebase_messaging_sender_id,
+  appId: functions.config().app.firebase_app_id
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -242,10 +247,9 @@ app.use(express.static(path.join(__dirname, 'src')));
 
 // Catch-all handler for any request that doesn't match one above
 app.get('*', (req, res) =>{
-  res.sendFile(path.join(__dirname, 'src', 'index.html'));
+  res.sendFile(path.join(__dirname, 'src', '404.html'));
 });
 
-
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`Server running on port ${port}`);
+// });

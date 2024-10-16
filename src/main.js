@@ -1,6 +1,5 @@
-// base URL
-// const baseURL = window.location.origin;
-const baseURL = "http://localhost:5501";
+const baseURL = "https://us-central1-chi-se-mo.cloudfunctions.net/api";
+// const baseURL = "${baseURL}";
 console.log("baseURL", baseURL);
 
 // Page Indexing
@@ -51,7 +50,7 @@ function initializeLikeButtons() {
   // console.log('Sent items: ', userResDB);
   // Send data to user_restaurants database
 function addToFavourites(userResDB, heartIcon) {
-  fetch('http://localhost:5501/api/user_restaurants', {
+  fetch(`${baseURL}/api/user_restaurants`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -75,7 +74,7 @@ function addToFavourites(userResDB, heartIcon) {
 
 function removeFromFavourites(userResDB, heartIcon) {
   // console.log(userResDB);
-  fetch(`http://localhost:5501/api/delete_user_restaurants?userID=${userResDB.userID}&placeID=${userResDB.placeID}`, {
+  fetch(`${baseURL}/api/delete_user_restaurants?userID=${userResDB.userID}&placeID=${userResDB.placeID}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -185,7 +184,7 @@ async function getLocation(event, userInput = '') {
 
 async function searchRestaurantByCoordinates(lat, lon) {
   try {
-      const response = await fetch("http://localhost:5501/getRestaurants", {
+      const response = await fetch(`${baseURL}/getRestaurants`, {
           method: "POST",
           headers: {"Content-Type": "application/json"},
           body: JSON.stringify({ lat, lon }),
@@ -203,7 +202,7 @@ async function searchRestaurantByCoordinates(lat, lon) {
 
 async function searchRestaurantByUserRequest(lat, lon, userInput) {
   try {
-      const response = await fetch("http://localhost:5501/getSearchedRestaurants", {
+      const response = await fetch(`${baseURL}/getSearchedRestaurants`, {
           method: "POST",
           headers: {"Content-Type": "application/json"},
           body: JSON.stringify({ lat, lon, userInput }),
@@ -230,7 +229,7 @@ async function checkLikedRestaurants(restaurants) {
 
 async function fetchUserLikedRestaurant(userId) {
   try {
-    const response = await fetch(`http://localhost:5501/api/user_restaurants?userID=${userId}`);
+    const response = await fetch(`${baseURL}/api/user_restaurants?userID=${userId}`);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
