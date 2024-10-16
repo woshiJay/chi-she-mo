@@ -8,14 +8,6 @@ const port = process.env.PORT || 5501;
 app.use(express.json());
 app.use(cors());
 
-// Serve static files from the src directory
-app.use(express.static(path.join(__dirname, 'src')));
-
-// Catch-all handler for any request that doesn't match one above
-app.get('*', (req, res) =>{
-  res.sendFile(path.join(__dirname, 'src', 'index.html'));
-});
-
 // ----------------------------------------------------------------------
 // Initializing of Firebase Admin SDK
 // ----------------------------------------------------------------------
@@ -140,6 +132,8 @@ app.get('/api/user_restaurants', async (req, res) => {
     }
     const userLikedRestaurantsRef = db.ref(`user_restaurants/${userID}`);
     const snapshot = await userLikedRestaurantsRef.once('value');
+    console.log("Snapshot Data:", snapshot.val()); // Debugging
+
     const userLikedRestaurants = snapshot.val() || {};
     const formattedRestaurants = Object.values(userLikedRestaurants).map((res) => ({
       resName: res.resName,
@@ -242,6 +236,15 @@ app.post("/getSearchedRestaurants", async (req, res) => {
     res.status(500).json({ error: "Error Fetching Data." });
   }
 });
+
+// Serve static files from the src directory
+app.use(express.static(path.join(__dirname, 'src')));
+
+// Catch-all handler for any request that doesn't match one above
+app.get('*', (req, res) =>{
+  res.sendFile(path.join(__dirname, 'src', 'index.html'));
+});
+
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
