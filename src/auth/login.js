@@ -33,7 +33,7 @@ async function submitLoginResponse(event) {
         if (data.uid) {
             sessionStorage.setItem('userId', data.uid);
             sessionStorage.setItem('username', data.username);
-            window.location.href = `${window.location.origin}/src/pages/home.html`;
+            window.location.href = `${window.location.origin}/pages/home.html`;
         } else {
             alert(data.alert || 'Error occurred!');
         }

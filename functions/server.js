@@ -3,11 +3,18 @@ const express = require("express");
 const path = require("path");
 const cors = require("cors");
 const app = express();
-const port = process.env.PORT || 5501;
 const functions = require('firebase-functions')
 
+const corsOptions = {
+  origin: ['https://chi-se-mo.web.app', 'http://localhost:5501'],
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  credentials: true, // Allow cookies if needed
+  optionsSuccessStatus: 200 // Some legacy browsers choke on a 204 response
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(express.json());
-app.use(cors());
 
 // ----------------------------------------------------------------------
 // Initializing of Firebase Admin SDK
@@ -249,6 +256,8 @@ app.use(express.static(path.join(__dirname, 'src')));
 app.get('*', (req, res) =>{
   res.sendFile(path.join(__dirname, 'src', '404.html'));
 });
+
+module.exports = app;
 
 // app.listen(port, () => {
 //   console.log(`Server running on port ${port}`);

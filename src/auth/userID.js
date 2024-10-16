@@ -1,5 +1,4 @@
-const baseURL = "https://us-central1-chi-se-mo.cloudfunctions.net/api";
-// const baseURL = "http://localhost:5501";
+const baseURL = window.location.origin;
 
 window.addEventListener('DOMContentLoaded', () => {
     const userId = sessionStorage.getItem('userId');

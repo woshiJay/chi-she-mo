@@ -1,4 +1,3 @@
-const baseURL = "https://us-central1-chi-se-mo.cloudfunctions.net/api";
 document.addEventListener('DOMContentLoaded', () => {
   const logoutButton = document.getElementById('logout');
   if (logoutButton) {
