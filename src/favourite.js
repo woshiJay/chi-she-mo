@@ -21,11 +21,13 @@ window.onload = async () => {
 
 function displayFavourites(restaurants) {
   const container = document.querySelector('.row.justify-content-center');
-  container.innerHTML = '';
+  container.innerHTML = '';  // Clear the container first
+
   if (restaurants.length === 0) {
     container.innerHTML = '<p>No favourite restaurants found.</p>';
     return;
   }
+
   restaurants.forEach((restaurant) => {
     const cardHtml = `
       <div class="col-12 col-lg-8 mx-auto">
@@ -59,8 +61,14 @@ function initializeLikeButtons() {
       
       try {
         await removeRestaurant(userId, placeId);
-        // Remove the entire card from the DOM
+        // Remove the card from the DOM
         this.closest('.col-12').remove();
+        
+        // After removing, check if there are any restaurants left
+        const remainingCards = document.querySelectorAll('.col-12');
+        if (remainingCards.length === 0) {
+          document.querySelector('.row.justify-content-center').innerHTML = '<p>No favourite restaurants found.</p>';
+        }
       } catch (error) {
         console.error('Error removing restaurant:', error);
       }
