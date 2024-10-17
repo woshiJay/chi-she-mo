@@ -18,6 +18,7 @@ async function handleLogout(event) {
     // Clear sessionStorage and redirect to login
     sessionStorage.clear();
     window.location.href = '/src/pages/login.html';
+    alert('Logged out successfully');
   } catch (error) {
     console.error('Logout error:', error);
     alert('Error logging out. Please try again.');

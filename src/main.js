@@ -191,11 +191,14 @@ async function searchRestaurantByCoordinates(lat, lon) {
           body: JSON.stringify({ lat, lon }),
       });
       currentResults = await response.json();
-      await checkLikedRestaurants(currentResults); // check in DB whether user has liked any of the restaurants
+      await checkLikedRestaurants(currentResults); 
       currentIndex = 0;
       console.log("Successful Request:", currentResults);
-      updatePagination(currentIndex, currentResults.length, itemsPerPage); // Update pagination
-      updateRestaurantContainer(); // Update restaurant container
+      alert("Data successfully fetched.");
+      // Update pagination
+      updatePagination(currentIndex, currentResults.length, itemsPerPage); 
+      // Update restaurant container
+      updateRestaurantContainer(); 
   } catch (error) {
       console.error("Error:", error);
   }
@@ -212,6 +215,7 @@ async function searchRestaurantByUserRequest(lat, lon, userInput) {
       await checkLikedRestaurants(currentResults); // check in DB whether user has liked any of the restaurants
       currentIndex = 0;
       console.log("Successful Request:", currentResults);
+      console.log("Data successfully fetched.");
       updatePagination(currentIndex, currentResults.length, itemsPerPage);
       updateRestaurantContainer();
   } catch (error) {

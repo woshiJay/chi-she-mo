@@ -77,8 +77,8 @@ async function removeRestaurant(userId, placeId) {
     if (!response.ok) {
       throw new Error('Failed to remove restaurant');
     }
-    
     console.log('Restaurant removed successfully');
+    alert('Restaurant removed successfully');
   } catch (error) {
     console.error('Error removing restaurant:', error);
     throw error;

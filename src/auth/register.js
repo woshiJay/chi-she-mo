@@ -28,6 +28,7 @@ async function submitRegistrationResponse(event) {
         const data = await response.json();  // Parse response safely
         console.log("Response Data:", data);
         if (data.redirect) {
+            alert('Registration successful! Redirecting to login page...');
             window.location.href = data.redirect;
         } else if (data.alert) {
             alert(data.alert);
