@@ -215,7 +215,7 @@ async function searchRestaurantByUserRequest(lat, lon, userInput) {
       await checkLikedRestaurants(currentResults); // check in DB whether user has liked any of the restaurants
       currentIndex = 0;
       console.log("Successful Request:", currentResults);
-      console.log("Data successfully fetched.");
+      alert("Data successfully fetched.");
       updatePagination(currentIndex, currentResults.length, itemsPerPage);
       updateRestaurantContainer();
   } catch (error) {

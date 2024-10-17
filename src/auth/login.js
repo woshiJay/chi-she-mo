@@ -27,6 +27,7 @@ async function submitLoginResponse(event) {
 
         const data = await response.json();
         if (data.uid) {
+            alert('Login successful!');
             sessionStorage.setItem('userId', data.uid);
             sessionStorage.setItem('username', data.username);  // Store username here
             window.location.href = `${window.location.origin}/src/pages/home.html`;
