@@ -3,13 +3,16 @@ const express = require("express");
 const path = require("path");
 const cors = require("cors");
 const app = express();
-const functions = require('firebase-functions')
+const port = 5501;
+const functions = require('firebase-functions');
+const axios = require('axios');
 
 const corsOptions = {
   origin: ['https://chi-se-mo.web.app', 'http://localhost:5501'],
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-  credentials: true, // Allow cookies if needed
-  optionsSuccessStatus: 200 // Some legacy browsers choke on a 204 response
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+  optionsSuccessStatus: 204
 };
 
 app.use(cors(corsOptions));
@@ -23,15 +26,10 @@ const admin = require('firebase-admin');
 const { getAuth } = require("firebase-admin/auth");
 
 if (!admin.apps.length) {
-  admin.initializeApp();  // No need for service account in Firebase Functions
+  admin.initializeApp();
 }
 
 const db = admin.database();
-
-// admin.initializeApp({
-//   credential: admin.credential.cert(serviceAccount),
-//   databaseURL: "https://chi-se-mo-default-rtdb.asia-southeast1.firebasedatabase.app/"
-// });
 
 // ----------------------------------------------------------------------
 // Initializing of Firebase SDK
@@ -72,16 +70,44 @@ app.post('/signup', async (req, res) => {
 });
 
 // Sign in route
+// app.post('/signin', async (req, res) => {
+//   const { email, password } = req.body;
+//   const firebaseAuthentication = firebaseAuth.getAuth();
+
+//   try {
+//     const userCredential = await firebaseAuth.signInWithEmailAndPassword(firebaseAuthentication, email, password);
+//     const userId = userCredential.user.uid;
+
+//     // Fetch the user's data
+//     const userRef = db.ref(`users/${userId}`);
+//     const snapshot = await userRef.once('value');
+//     const data = snapshot.val();
+
+//     if (data) {
+//       res.status(200).json({ uid: userId, username: data.username });
+//     } else {
+//       res.status(404).json({ alert: "User not found!" });
+//     }
+//   } catch (error) {
+//     res.status(401).json({ alert: 'Invalid email or password! Please try again.' });
+//   }
+// });
+
 app.post('/signin', async (req, res) => {
   const { email, password } = req.body;
-  const firebaseAuthentication = firebaseAuth.getAuth();
+  const apiKey = functions.config().app.firebase_api_key; // Ensure this is set
 
   try {
-    const userCredential = await firebaseAuth.signInWithEmailAndPassword(firebaseAuthentication, email, password);
-    const userId = userCredential.user.uid;
+    const response = await axios.post(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`, {
+      email,
+      password,
+      returnSecureToken: true
+    });
+
+    const userId = response.data.localId;
 
     // Fetch the user's data
-    const userRef = db.ref(`users/${userId}`);
+    const userRef = admin.database().ref(`users/${userId}`);
     const snapshot = await userRef.once('value');
     const data = snapshot.val();
 
@@ -91,6 +117,7 @@ app.post('/signin', async (req, res) => {
       res.status(404).json({ alert: "User not found!" });
     }
   } catch (error) {
+    console.error("Signin Error:", error.response ? error.response.data : error.message);
     res.status(401).json({ alert: 'Invalid email or password! Please try again.' });
   }
 });
@@ -257,8 +284,4 @@ app.get('*', (req, res) =>{
   res.sendFile(path.join(__dirname, 'src', '404.html'));
 });
 
-module.exports = app;
-
-// app.listen(port, () => {
-//   console.log(`Server running on port ${port}`);
-// });
+exports.api = functions.https.onRequest(app);

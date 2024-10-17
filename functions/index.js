@@ -10,10 +10,15 @@
 // const {onRequest} = require("firebase-functions/v2/https");
 // const logger = require("firebase-functions/logger");
 
-const functions = require('firebase-functions');
-const server = require('./server');
+// const functions = require('firebase-functions');
+// const cors = require('cors')({origin: true});
+// const app = require('./server'); // or wherever your Express app is defined
 
-exports.api = functions.https.onRequest(server);
+// exports.api = functions.https.onRequest((request, response) => {
+//   cors(request, response, () => {
+//     app(request, response);
+//   });
+// });
 
 // Create and deploy your first functions
 // https://firebase.google.com/docs/functions/get-started

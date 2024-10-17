@@ -1,5 +1,4 @@
 const baseURL = "https://us-central1-chi-se-mo.cloudfunctions.net/api";
-// const baseURL = "http://localhost:5501";
 console.log("baseURL", baseURL);
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -13,32 +12,30 @@ function initializeLogin() {
 
 async function submitLoginResponse(event) {
     event.preventDefault();
-
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-
     try {
-        const response = await fetch(`${baseURL}/signin`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
-        });
-        
-        if (!response.ok) {
-            console.error('Server responded with an error:', response.status);
-            throw new Error('Failed to authenticate');
-        }
-        
-        const data = await response.json();
-        if (data.uid) {
-            sessionStorage.setItem('userId', data.uid);
-            sessionStorage.setItem('username', data.username);
-            window.location.href = `${window.location.origin}/pages/home.html`;
-        } else {
-            alert(data.alert || 'Error occurred!');
-        }
+      const response = await fetch(`${baseURL}/signin`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to authenticate');
+      }
+      const data = await response.json();
+      if (data.uid) {
+        sessionStorage.setItem('userId', data.uid);
+        sessionStorage.setItem('username', data.username);
+        window.location.href = `${window.location.origin}/pages/home.html`;
+      } else {
+        alert(data.alert || 'Error occurred!');
+      }
     } catch (error) {
-        console.error("Error:", error);
+      console.error("Error:", error);
+      alert(`Authentication failed: ${error.message}`);
     }
-}
-
+  }
