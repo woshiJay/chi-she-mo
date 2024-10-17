@@ -14,11 +14,10 @@ async function handleLogout(event) {
     if (!response.ok) {
       throw new Error('Failed to logout. Please try again.');
     }
-
+    alert('Logged out successfully');
     // Clear sessionStorage and redirect to login
     sessionStorage.clear();
     window.location.href = '/src/pages/login.html';
-    alert('Logged out successfully');
   } catch (error) {
     console.error('Logout error:', error);
     alert('Error logging out. Please try again.');

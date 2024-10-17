@@ -6,6 +6,14 @@ window.addEventListener('DOMContentLoaded', () => {
     const username = sessionStorage.getItem('username');  // Get username from storage
 
     if (!userId) {
+        const spinner = document.createElement('div');
+        spinner.classList.add('spinner');
+        document.body.appendChild(spinner);
+
+        // Redirect after a short delay to show the spinner
+        setTimeout(() => {
+            window.location.href = '/src/pages/login.html';
+        }, 1000);
         window.location.href = '/src/pages/login.html';
     } else {
         const usernameElement = document.querySelector('.user-disp');
