@@ -8,6 +8,61 @@ const port = process.env.PORT || 5501;
 app.use(express.json());
 app.use(cors());
 
+// Pages routing
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, 'src/pages', 'login.html'));
+});
+
+app.get('/register', (req, res) => {
+  res.sendFile(path.join(__dirname, 'src/pages', 'register.html'));
+});
+
+app.get('/home', (req, res) => {
+  res.sendFile(path.join(__dirname, 'src/pages', 'home.html'));
+});
+
+app.get('/favourite', (req, res) => {
+  res.sendFile(path.join(__dirname, 'src/pages', 'favourite.html'));
+});
+
+app.get('/about', (req, res) => {
+  res.sendFile(path.join(__dirname, 'src/pages', 'about.html'));
+});
+
+// CSS routing
+app.get('/styles', (req, res) => {
+  res.sendFile(path.join(__dirname, 'src/styles', 'style.css'));
+});
+
+// JS routing
+app.get('/main', (req, res) => {
+  res.sendFile(path.join(__dirname, 'src', 'main.js'));
+});
+
+app.get('/favouriteJS', (req, res) => {
+  res.sendFile(path.join(__dirname, 'src', 'favourite.js'));
+});
+
+app.get('/userID', (req, res) => {
+  res.sendFile(path.join(__dirname, 'src/auth', 'userID.js'));
+});
+
+app.get('/registerJS', (req, res) => {
+  res.sendFile(path.join(__dirname, 'src/auth', 'register.js'));
+});
+
+app.get('/loginJS', (req, res) => {
+  res.sendFile(path.join(__dirname, 'src/auth', 'login.js'));
+});
+
+app.get('/logoutJS', (req, res) => {
+  res.sendFile(path.join(__dirname, 'src/auth', 'logout.js'));
+});
+
+app.get('/animation', (req, res) => {
+  res.sendFile(path.join(__dirname, 'src/animation', 'animation.js'));
+});
+
 // ----------------------------------------------------------------------
 // Initializing of Firebase Admin SDK
 // ----------------------------------------------------------------------
