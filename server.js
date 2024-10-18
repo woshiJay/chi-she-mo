@@ -8,6 +8,9 @@ const port = process.env.PORT || 5501;
 app.use(express.json());
 app.use(cors());
 
+// Serve static files from the 'src' directory
+app.use(express.static(path.join(__dirname, 'src')));
+
 // Pages routing
 app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname, 'src/pages', 'login.html'));
@@ -27,11 +30,6 @@ app.get('/favourite', (req, res) => {
 
 app.get('/about', (req, res) => {
   res.sendFile(path.join(__dirname, 'src/pages', 'about.html'));
-});
-
-// CSS routing
-app.get('/styles', (req, res) => {
-  res.sendFile(path.join(__dirname, 'src/styles', 'style.css'));
 });
 
 // JS routing

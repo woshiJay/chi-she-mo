@@ -6,7 +6,7 @@ window.onload = async () => {
   }
   try {
     console.log("Fetching favourite restaurants for user:", userId);
-    const resp = await fetch(`http://localhost:5501/api/user_restaurants?userID=${userId}`);
+    const resp = await fetch(`${baseURL}/api/user_restaurants?userID=${userId}`);
     const responseText = await resp.text();
     console.log("Response Text:", responseText);
     const data = JSON.parse(responseText);
@@ -78,7 +78,7 @@ function initializeLikeButtons() {
 
 async function removeRestaurant(userId, placeId) {
   try {
-    const response = await fetch(`http://localhost:5501/api/delete_user_restaurants?userID=${userId}&placeID=${placeId}`, {
+    const response = await fetch(`${baseURL}/api/delete_user_restaurants?userID=${userId}&placeID=${placeId}`, {
       method: 'DELETE',
     });
     
