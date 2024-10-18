@@ -12,25 +12,25 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, 'src')));
 
 // Pages routing
-app.get('/login', (req, res) => {
-  res.sendFile(path.join(__dirname, 'src/pages', 'login.html'));
-});
+// app.get('/login', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'src/pages', 'login.html'));
+// });
 
-app.get('/register', (req, res) => {
-  res.sendFile(path.join(__dirname, 'src/pages', 'register.html'));
-});
+// app.get('/register', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'src/pages', 'register.html'));
+// });
 
-app.get('/home', (req, res) => {
-  res.sendFile(path.join(__dirname, 'src/pages', 'home.html'));
-});
+// app.get('/home', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'src/pages', 'home.html'));
+// });
 
-app.get('/favourite', (req, res) => {
-  res.sendFile(path.join(__dirname, 'src/pages', 'favourite.html'));
-});
+// app.get('/favourite', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'src/pages', 'favourite.html'));
+// });
 
-app.get('/about', (req, res) => {
-  res.sendFile(path.join(__dirname, 'src/pages', 'about.html'));
-});
+// app.get('/about', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'src/pages', 'about.html'));
+// });
 
 // JS routing
 app.get('/main', (req, res) => {
