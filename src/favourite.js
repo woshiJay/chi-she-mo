@@ -61,6 +61,12 @@ function initializeLikeButtons() {
         await removeRestaurant(userId, placeId);
         // Remove the entire card from the DOM
         this.closest('.col-12').remove();
+        
+        // After removing, check if there are any restaurants left
+        const remainingCards = document.querySelectorAll('.col-12');
+        if (remainingCards.length === 0) {
+          document.querySelector('.row.justify-content-center').innerHTML = '<p>No favourite restaurants found.</p>';
+        }
       } catch (error) {
         console.error('Error removing restaurant:', error);
       }
@@ -77,7 +83,7 @@ async function removeRestaurant(userId, placeId) {
     if (!response.ok) {
       throw new Error('Failed to remove restaurant');
     }
-    
+    alert('Restaurant removed successfully');
     console.log('Restaurant removed successfully');
   } catch (error) {
     console.error('Error removing restaurant:', error);

@@ -193,6 +193,7 @@ async function searchRestaurantByCoordinates(lat, lon) {
       await checkLikedRestaurants(currentResults); // check in DB whether user has liked any of the restaurants
       currentIndex = 0;
       console.log("Successful Request:", currentResults);
+      alert("Successfully fetched restaurants");
       updatePagination(currentIndex, currentResults.length, itemsPerPage); // Update pagination
       updateRestaurantContainer(); // Update restaurant container
   } catch (error) {
@@ -211,6 +212,7 @@ async function searchRestaurantByUserRequest(lat, lon, userInput) {
       await checkLikedRestaurants(currentResults); // check in DB whether user has liked any of the restaurants
       currentIndex = 0;
       console.log("Successful Request:", currentResults);
+      alert("Successfully fetched restaurants");
       updatePagination(currentIndex, currentResults.length, itemsPerPage);
       updateRestaurantContainer();
   } catch (error) {

@@ -30,6 +30,7 @@ async function submitLoginResponse(event) {
       if (data.uid) {
         sessionStorage.setItem('userId', data.uid);
         sessionStorage.setItem('username', data.username);
+        alert('Logged in successfully!');
         window.location.href = `${window.location.origin}/pages/home.html`;
       } else {
         alert(data.alert || 'Error occurred!');
