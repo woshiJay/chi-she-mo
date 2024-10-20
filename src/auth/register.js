@@ -16,6 +16,7 @@ async function submitRegistrationResponse(event) {
     const username = document.getElementById('username').value;
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
+    showLoadingSpinner(true);  // Show spinner during logout process
 
     try {
         const response = await fetch(`${baseURL}/signup`, {
@@ -37,6 +38,8 @@ async function submitRegistrationResponse(event) {
         }
     } catch (error) {
         console.error("Error:", error);
+    } finally {
+        showLoadingSpinner(false);  // Hide spinner when registration is complete
     }
 }
 

@@ -14,6 +14,7 @@ async function submitLoginResponse(event) {
     event.preventDefault();
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
+    showLoadingSpinner(true);
     try {
       const response = await fetch(`${baseURL}/signin`, {
         method: 'POST',
@@ -38,5 +39,7 @@ async function submitLoginResponse(event) {
     } catch (error) {
       console.error("Error:", error);
       alert(`Authentication failed: ${error.message}`);
-    }
+    } finally {
+      showLoadingSpinner(false);  // Hide spinner when login is complete
   }
+}

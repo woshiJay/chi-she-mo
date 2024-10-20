@@ -11027,3 +11027,27 @@ footer.footer {
   max-height: 500px;
   overflow-y: auto;
 }
+
+/* Spinner element */
+#loadingSpinner {
+  display: none; /* Hide the spinner by default */
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000; /* Make sure it's above other elements */
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+  border: 0.25em solid #f3f3f3;
+  border-top: 0.25em solid #3498db;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
