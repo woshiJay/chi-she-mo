@@ -21,6 +21,14 @@
     ],
     "rewrites": [
       {
+        "source": "/signin",
+        "function": "api"
+      },
+      {
+        "source": "/signup",
+        "function": "api"
+      },
+      {
         "source": "/api/**",
         "function": "api"
       }

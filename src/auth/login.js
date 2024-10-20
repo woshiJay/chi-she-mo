@@ -1,4 +1,4 @@
-const baseURL = "https://us-central1-chi-se-mo.cloudfunctions.net/api";
+const baseURL = window.location.origin;
 console.log("baseURL", baseURL);
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -20,7 +20,7 @@ async function submitLoginResponse(event) {
         headers: { 
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password }),
       });
       if (!response.ok) {
         const errorData = await response.json();

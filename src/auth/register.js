@@ -1,4 +1,4 @@
-const baseURL = "https://us-central1-chi-se-mo.cloudfunctions.net/api";
+const baseURL = window.location.origin;
 // const baseURL = "http://localhost:5501";
 console.log("baseURL", baseURL);
 

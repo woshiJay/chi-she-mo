@@ -1,4 +1,3 @@
-const baseURL = "https://us-central1-chi-se-mo.cloudfunctions.net/api";
 window.onload = async () => {
   const userId = sessionStorage.getItem('userId');
   if (!userId) {

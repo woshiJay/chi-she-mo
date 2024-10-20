@@ -12,11 +12,12 @@ const corsOptions = {
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
-  optionsSuccessStatus: 204
 };
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
+app.options('*', (req, res) => {
+  res.sendStatus(204);
+});
 app.use(express.json());
 
 // ----------------------------------------------------------------------
@@ -46,6 +47,8 @@ const firebaseConfig = {
   messagingSenderId: functions.config().app.firebase_messaging_sender_id,
   appId: functions.config().app.firebase_app_id
 };
+
+console.log("Firebase Config:", firebaseConfig); // check whether properly configured
 
 firebase.initializeApp(firebaseConfig);
 
@@ -119,16 +122,6 @@ app.post('/signin', async (req, res) => {
   } catch (error) {
     console.error("Signin Error:", error.response ? error.response.data : error.message);
     res.status(401).json({ alert: 'Invalid email or password! Please try again.' });
-  }
-});
-
-// Sign out route
-app.get('/signout', async (req, res) => {
-  try {
-    await firebaseAuth.getAuth().signOut();
-    res.status(200).json({ message: "User signed out successfully!" });
-  } catch (error) {
-    res.status(500).json({ alert: "Error signing out" });
   }
 });
 
@@ -274,14 +267,6 @@ app.post("/getSearchedRestaurants", async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: "Error Fetching Data." });
   }
-});
-
-// Serve static files from the src directory
-app.use(express.static(path.join(__dirname, 'src')));
-
-// Catch-all handler for any request that doesn't match one above
-app.get('*', (req, res) =>{
-  res.sendFile(path.join(__dirname, 'src', '404.html'));
 });
 
 exports.api = functions.https.onRequest(app);
