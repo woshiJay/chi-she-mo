@@ -1,11 +1,11 @@
-// import { } from '/src/api/geolocation.js'; // import getLocation
-// import { initializeLikeButtons } from '/src/favourite.js';
+const baseURL = window.location.origin;
+// const baseURL = "${baseURL}";
+console.log("baseURL", baseURL);
 
 // Page Indexing
 let currentResults = [];
 let currentIndex = 0;
 const itemsPerPage = 5;
-let userId = sessionStorage.getItem('userId');
 
 function initializeLikeButtons() {
   const likeButtons = document.querySelectorAll(".likeButton");
@@ -47,13 +47,13 @@ function initializeLikeButtons() {
   });
 }
 
-function addToFavourites(userResDB, heartIcon) {
   // console.log('Sent items: ', userResDB);
   // Send data to user_restaurants database
-  fetch('/api/user_restaurants', {
-    method: 'POST', // Specify the method
+function addToFavourites(userResDB, heartIcon) {
+  fetch(`${baseURL}/api/user_restaurants`, {
+    method: 'POST',
     headers: {
-      'Content-Type': 'application/json', // Set the content type header for JSON
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(userResDB)
   })
@@ -74,7 +74,7 @@ function addToFavourites(userResDB, heartIcon) {
 
 function removeFromFavourites(userResDB, heartIcon) {
   // console.log(userResDB);
-  fetch(`/api/delete_user_restaurants?userID=${userResDB.userID}&placeID=${userResDB.placeID}`, {
+  fetch(`${baseURL}/api/delete_user_restaurants?userID=${userResDB.userID}&placeID=${userResDB.placeID}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -184,7 +184,7 @@ async function getLocation(event, userInput = '') {
 
 async function searchRestaurantByCoordinates(lat, lon) {
   try {
-      const response = await fetch("/getRestaurants", {
+      const response = await fetch(`${baseURL}/getRestaurants`, {
           method: "POST",
           headers: {"Content-Type": "application/json"},
           body: JSON.stringify({ lat, lon }),
@@ -193,6 +193,7 @@ async function searchRestaurantByCoordinates(lat, lon) {
       await checkLikedRestaurants(currentResults); // check in DB whether user has liked any of the restaurants
       currentIndex = 0;
       console.log("Successful Request:", currentResults);
+      alert("Successfully fetched restaurants");
       updatePagination(currentIndex, currentResults.length, itemsPerPage); // Update pagination
       updateRestaurantContainer(); // Update restaurant container
   } catch (error) {
@@ -202,7 +203,7 @@ async function searchRestaurantByCoordinates(lat, lon) {
 
 async function searchRestaurantByUserRequest(lat, lon, userInput) {
   try {
-      const response = await fetch("/getSearchedRestaurants", {
+      const response = await fetch(`${baseURL}/getSearchedRestaurants`, {
           method: "POST",
           headers: {"Content-Type": "application/json"},
           body: JSON.stringify({ lat, lon, userInput }),
@@ -211,6 +212,7 @@ async function searchRestaurantByUserRequest(lat, lon, userInput) {
       await checkLikedRestaurants(currentResults); // check in DB whether user has liked any of the restaurants
       currentIndex = 0;
       console.log("Successful Request:", currentResults);
+      alert("Successfully fetched restaurants");
       updatePagination(currentIndex, currentResults.length, itemsPerPage);
       updateRestaurantContainer();
   } catch (error) {
@@ -219,24 +221,25 @@ async function searchRestaurantByUserRequest(lat, lon, userInput) {
 }
 
 async function checkLikedRestaurants(restaurants) {
-  // const userId = sessionStorage.getItem('userId');
+  const userId = sessionStorage.getItem('userId');
   const userLikedRestaurants = await fetchUserLikedRestaurant(userId); // pass to fetching
   restaurants.forEach(restaurant => {
-    restaurant.isLiked = userLikedRestaurants.some(likedRestaurant => likedRestaurant.place_id === restaurant.place_id);
+    // restaurant.isLiked = userLikedRestaurants.some(likedRestaurant => likedRestaurant.place_id === restaurant.place_id);
+    restaurant.isLiked = userLikedRestaurants.includes(restaurant.place_id);
   });
 }
 
 async function fetchUserLikedRestaurant(userId) {
   try {
-    const response = await fetch(`/api/user_restaurants?userID=${userId}`);
+    const response = await fetch(`${baseURL}/api/user_restaurants?userID=${userId}`);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
     const userLikedRestaurants = await response.json();
-    return userLikedRestaurants.map(restaurant=> restaurant.placeID); // return array of placeIDs
+    return userLikedRestaurants.map(restaurant => restaurant.placeID);
   } catch (error) {
     console.error("Error:", error);
-    return []; // return empty array if error
+    return [];
   }
 }
 
@@ -334,5 +337,3 @@ document.addEventListener("DOMContentLoaded", async function() {
   initializeBackButton();
   initializeLocationAndSearch();
 });
-
-

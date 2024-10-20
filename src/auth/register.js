@@ -1,3 +1,7 @@
+const baseURL = window.location.origin;
+// const baseURL = "http://localhost:5501";
+console.log("baseURL", baseURL);
+
 document.addEventListener('DOMContentLoaded', () => {
     initializeRegistration();
 });
@@ -14,15 +18,17 @@ async function submitRegistrationResponse(event) {
     const password = document.getElementById('password').value;
 
     try {
-        const response = await fetch('/signup', {
+        const response = await fetch(`${baseURL}/signup`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, email, password }),
-        });
-        const data = await response.json();
+          });
+          
+        console.log(response.status);  // Log status to ensure request success
+        const data = await response.json();  // Parse response safely
+        console.log("Response Data:", data);
         if (data.redirect) {
+            alert('Registered successfully!');
             window.location.href = data.redirect;
         } else if (data.alert) {
             alert(data.alert);

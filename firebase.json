@@ -1,0 +1,64 @@
+{
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ]
+    }
+  ],
+  "hosting": {
+    "public": "src",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/signin",
+        "function": "api"
+      },
+      {
+        "source": "/signup",
+        "function": "api"
+      },
+      {
+        "source": "/getRestaurants",
+        "function": "api"
+      },
+      {
+        "source": "/getSearchedRestaurants",
+        "function": "api"
+      },
+      {
+        "source": "/api/**",
+        "function": "api"
+      }
+    ],
+    "headers": [
+      {
+        "source": "**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
+          },
+          {
+            "key": "Pragma",
+            "value": "no-cache"
+          },
+          {
+            "key": "Expires",
+            "value": "0"
+          }
+        ]
+      }
+    ]
+  }
+}
