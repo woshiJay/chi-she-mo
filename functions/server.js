@@ -65,7 +65,7 @@ app.post('/signup', async (req, res) => {
   try {
     const userRecord = await admin.auth().createUser({ email, password });
     await db.ref(`users/${userRecord.uid}`).set({ username });
-    res.status(200).json({ redirect: '/src/pages/login.html' });
+    res.status(200).json({ redirect: '/pages/login.html' });
   } catch (error) {
     console.error("Signup Error:", error);  // Log errors for better debugging
     res.status(400).json({ alert: error.message });

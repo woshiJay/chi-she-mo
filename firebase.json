@@ -29,6 +29,14 @@
         "function": "api"
       },
       {
+        "source": "/getRestaurants",
+        "function": "api"
+      },
+      {
+        "source": "/getSearchedRestaurants",
+        "function": "api"
+      },
+      {
         "source": "/api/**",
         "function": "api"
       }
@@ -38,20 +46,16 @@
         "source": "**",
         "headers": [
           {
-            "key": "Access-Control-Allow-Origin",
-            "value": "https://us-central1-chi-se-mo.cloudfunctions.net"
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
           },
           {
-            "key": "Access-Control-Allow-Methods",
-            "value": "GET, POST, PUT, DELETE, OPTIONS"
+            "key": "Pragma",
+            "value": "no-cache"
           },
           {
-            "key": "Access-Control-Allow-Headers",
-            "value": "Content-Type, Authorization"
-          },
-          {
-            "key": "Access-Control-Allow-Credentials",
-            "value": "true"
+            "key": "Expires",
+            "value": "0"
           }
         ]
       }

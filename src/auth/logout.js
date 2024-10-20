@@ -11,5 +11,6 @@ function handleLogout(event) {
 
   // Clear sessionStorage and redirect to login
   sessionStorage.clear();
-  window.location.href = '/src/pages/login.html';
+  alert('Logged out successfully!');
+  window.location.href = '/pages/login.html';
 }
