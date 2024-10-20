@@ -6,6 +6,8 @@ const app = express();
 const port = 5501;
 const functions = require('firebase-functions');
 const axios = require('axios');
+const rateLimit = require('express-rate-limit');
+const { check, validationResult } = require('express-validator');
 
 const corsOptions = {
   origin: ['https://chi-se-mo.web.app', 'http://localhost:5501'],
@@ -15,10 +17,23 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.use(limiter);
 app.options('*', (req, res) => {
   res.sendStatus(204);
 });
 app.use(express.json());
+
+// ----------------------------------------------------------------------
+// Rate Limiting
+// ----------------------------------------------------------------------
+
+
+// Apply rate limit to all API routes
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per window
+  message: 'Too many requests from this IP, please try again after 15 minutes'
+});
 
 // ----------------------------------------------------------------------
 // Initializing of Firebase Admin SDK
@@ -56,12 +71,21 @@ firebase.initializeApp(firebaseConfig);
 // Authentication
 // ----------------------------------------------------------------------
 
-app.post('/signup', async (req, res) => {
-  const { username, email, password } = req.body;
-  if (!username || !email || !password) {
-    return res.status(400).json({ alert: 'Please ensure that all fields are filled.' });
+
+app.post('/signup', [
+  check('username').isLength({ min: 3 }).withMessage('Username must be at least 3 characters long'),
+  check('email').isEmail().withMessage('Please provide a valid email'),
+  check('password').isLength({ min: 8 })
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
+    .withMessage('Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character'),
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
   }
-  
+
+  const { username, email, password } = req.body;
+
   try {
     const userRecord = await admin.auth().createUser({ email, password });
     await db.ref(`users/${userRecord.uid}`).set({ username });
@@ -71,30 +95,6 @@ app.post('/signup', async (req, res) => {
     res.status(400).json({ alert: error.message });
   }
 });
-
-// Sign in route
-// app.post('/signin', async (req, res) => {
-//   const { email, password } = req.body;
-//   const firebaseAuthentication = firebaseAuth.getAuth();
-
-//   try {
-//     const userCredential = await firebaseAuth.signInWithEmailAndPassword(firebaseAuthentication, email, password);
-//     const userId = userCredential.user.uid;
-
-//     // Fetch the user's data
-//     const userRef = db.ref(`users/${userId}`);
-//     const snapshot = await userRef.once('value');
-//     const data = snapshot.val();
-
-//     if (data) {
-//       res.status(200).json({ uid: userId, username: data.username });
-//     } else {
-//       res.status(404).json({ alert: "User not found!" });
-//     }
-//   } catch (error) {
-//     res.status(401).json({ alert: 'Invalid email or password! Please try again.' });
-//   }
-// });
 
 app.post('/signin', async (req, res) => {
   const { email, password } = req.body;
