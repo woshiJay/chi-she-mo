@@ -17,7 +17,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(limiter);
 app.options('*', (req, res) => {
   res.sendStatus(204);
 });
@@ -27,13 +26,13 @@ app.use(express.json());
 // Rate Limiting
 // ----------------------------------------------------------------------
 
-
-// Apply rate limit to all API routes
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // Limit each IP to 100 requests per window
   message: 'Too many requests from this IP, please try again after 15 minutes'
 });
+
+app.use(limiter);
 
 // ----------------------------------------------------------------------
 // Initializing of Firebase Admin SDK
